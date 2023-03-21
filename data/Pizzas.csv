@@ -1,37 +1,37 @@
-﻿pizza_id;pizza_name;ingredients
-1;Margharita;sos pomidorowy, ser, oregano
-2;Funghi;sos pomidorowy, ser, oregano, pieczarki
-3;Salami;sos pomidorowy, ser, oregano, salami
-4;Szynka;sos pomidorowy, ser, oregano, szynka
-5;Rustica;sos pomidorowy, ser, oregano, boczek
-6;Kurczak;sos pomidorowy, ser, oregano, kurczak
-7;Pescatore;sos pomidorowy, ser, oregano, tuńczyk, cebula, kukurydza
-8;Wiejska;sos pomidorowy, ser, oregano, kiełbasa, cebula, ogórek kiszony
-9;Capri Firmowa;sos pomidorowy, ser, oregano, pieczarki, papryka, szynka
-10;Tricolore;sos pomidorowy, ser, oregano, brokuł, cukinia, papryka, kukurydza, pomidor, mozzarella
-11;Neapolitana;sos pomidorowy, ser, oregano, boczek, salami, szynka, pomidor, papryka, oliwki
-12;Dipollo;sos pomidorowy, ser, oregano, kurczak, papryka, kukurydza
-13;Spinaci;sos pomidorowy, ser, oregano, sos czosnkowy, ser, szpinak, kurczak, papryka
-14;Góralska;sos pomidorowy, ser, oregano, sos czosnkowy, ser wędzony, cebula, boczek
-15;Pepperoni;sos pomidorowy, ser, oregano, salami, kiełbasa, pieczarki, papryka pepperoni, sos sambal
-16;Hawajska;sos pomidorowy, ser, oregano, szynka, ananas
-17;Bacy;sos pomidorowy, ser, oregano, boczek, salami, ogórek kiszony, cebula, oscypek
-18;Brasil;sos pomidorowy, ser, oregano, camembert, szpinak, świeży ogórek, kukurydza
-19;Królewska;sos pomidorowy, ser XL, oregano, szynka, salami, boczek, kiełbasa, papryka, pieczarki, czerwona cebula
-20;Chicago;sos pomidorowy, ser, oregano, kurczak, pieczarki, boczek, czerwona cebula
-21;Amore;sos pomidorowy, ser, oregano, kurczak, ananas, kukurydza
-22;Diabelska;sos sambal, ser, oregano, pieczarki, salami, szynka, boczek, papryka, cebula
-23;Rafaello;sos pomidorowy, ser, oregano, szynka, kurczak, pieczarki, ananas
-24;Pinokio;sos pomidorowy, ser, oregano, salami, papryka, szynka, kurczak
-25;Meksyk;sos pomidorowy, ser, oregano,sos tabasco, kurczak, wołowina, pomidor, kukurydza, czosnek
-26;Babilon;sos pomidorowy, ser, oregano, ser XL, jajka, szynka, kurczak, majonez, pomidor, ogórek
-27;Serowa;sos pomidorowy, ser, oregano, ser mozzarella, ser wędzony, parmezan, ser feta, camembert
-28;Kebab;sos pomidorowy, ser, oregano, kurczak, cebula, ogórek kiszony, ogórek świeży, pomidor, pekińska
-29;Przysmak Biskupa;sos pomidorowy, ser, oregano, salami, jalapeno, świeży czosnek i cebula
-30;Primavera;sos pomidorowy, ser, oregano, sambal (sos ostry), salami poprószone pieczarkami
-31;BBQ z kurczakiem;sos BBQ, boczek, grillowany kurczak, czerwona cebula, czosnek, papryka, kukurydza
-32;BBQ z wołowiną;sos BBQ, boczek, wołowina, czerwona cebula, czosnek, jalapeno, kukurydza
-33;Carbonara;sos czosnkowy, boczek, cebula, czosnek, jajko, parmezan, świeża pietruszka
-34;Broccoli;sos czosnkowy, brokuły, kukurydza, ser feta, mięso kebab
-35;Farmerska;sos pomidorowy, ser, oregano, boczek, salami, kiełbasa, cebula, kukurydza, papryka
-36;Verdura;ser feta, szpinak, oliwki, czerwona cebula
+﻿pizza_id;pizza_name;ingredients;price
+1;Margharita;sos pomidorowy, ser, oregano;38,5
+2;Funghi;sos pomidorowy, ser, oregano, pieczarki;41
+3;Salami;sos pomidorowy, ser, oregano, salami;44,5
+4;Szynka;sos pomidorowy, ser, oregano, szynka;44,5
+5;Rustica;sos pomidorowy, ser, oregano, boczek;44,5
+6;Kurczak;sos pomidorowy, ser, oregano, kurczak;44,5
+7;Pescatore;sos pomidorowy, ser, oregano, tuńczyk, cebula, kukurydza;48,9
+8;Wiejska;sos pomidorowy, ser, oregano, kiełbasa, cebula, ogórek kiszony;48,9
+9;Capri Firmowa;sos pomidorowy, ser, oregano, pieczarki, papryka, szynka;48,9
+10;Tricolore;sos pomidorowy, ser, oregano, brokuł, cukinia, papryka, kukurydza, pomidor, ser mozzarella;53,9
+11;Neapolitana;sos pomidorowy, ser, oregano, boczek, salami, szynka, pomidor, papryka, oliwki;51,9
+12;Dipollo;sos pomidorowy, ser, oregano, kurczak, papryka, kukurydza;48,9
+13;Spinaci;sos pomidorowy, ser, oregano, sos czosnkowy, szpinak, kurczak, papryka;53,9
+14;Góralska;sos pomidorowy, ser, oregano, sos czosnkowy, ser wędzony, cebula, boczek;53,9
+15;Pepperoni;sos pomidorowy, ser, oregano, salami, kiełbasa, pieczarki, papryka pepperoni, sos sambal (sos ostry);51,9
+16;Hawajska;sos pomidorowy, ser, oregano, szynka, ananas;48,9
+17;Bacy;sos pomidorowy, ser, oregano, boczek, salami, ogórek kiszony, cebula, oscypek;53,9
+18;Brasil;sos pomidorowy, ser, oregano, camembert, szpinak, świeży ogórek, kukurydza;51,9
+19;Królewska;sos pomidorowy, ser, oregano, szynka, salami, boczek, kiełbasa, papryka, pieczarki, czerwona cebula;57,9
+20;Chicago;sos pomidorowy, ser, oregano, kurczak, pieczarki, boczek, czerwona cebula;53,9
+21;Amore;sos pomidorowy, ser, oregano, kurczak, ananas, kukurydza;48,9
+22;Diabelska;sos sambal (sos ostry), ser, oregano, pieczarki, salami, szynka, boczek, papryka, cebula;53,9
+23;Rafaello;sos pomidorowy, ser, oregano, szynka, kurczak, pieczarki, ananas;50,9
+24;Pinokio;sos pomidorowy, ser, oregano, salami, papryka, szynka, kurczak;50,9
+25;Meksyk;sos pomidorowy, ser, oregano, sos tabasco, kurczak, wołowina, pomidor, kukurydza, czosnek;55,9
+26;Babilon;sos pomidorowy, ser, oregano, ser, jajka, szynka, kurczak, majonez, pomidor, ogórek;55,9
+27;Serowa;sos pomidorowy, ser, oregano, ser mozzarella, ser wędzony, parmezan, ser feta, camembert;53,9
+28;Kebab;sos pomidorowy, ser, oregano, kurczak, cebula, ogórek kiszony, ogórek świeży, pomidor, pekińska;53,9
+29;Przysmak Biskupa;sos pomidorowy, ser, oregano, salami, jalapeno, czosnek, cebula;50,9
+30;Primavera;sos pomidorowy, ser, oregano, sos sambal (sos ostry), salami, pieczarki;48,9
+31;BBQ z kurczakiem;sos BBQ, boczek, grillowany kurczak, czerwona cebula, czosnek, papryka, kukurydza;53,9
+32;BBQ z wołowiną;sos BBQ, boczek, wołowina, czerwona cebula, czosnek, jalapeno, kukurydza;53,9
+33;Carbonara;sos czosnkowy, boczek, cebula, czosnek, jajko, parmezan, świeża pietruszka;53,9
+34;Broccoli;sos czosnkowy, brokuły, kukurydza, ser feta, mięso kebab;55,9
+35;Farmerska;sos pomidorowy, ser, oregano, boczek, salami, kiełbasa, cebula, kukurydza, papryka;53,9
+36;Verdura;ser feta, szpinak, oliwki, czerwona cebula;48,9
