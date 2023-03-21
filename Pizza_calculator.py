@@ -27,7 +27,7 @@ def read_pizza_file(filename: str) -> Tuple[np.ndarray, list, list, list]:
         pizzas_names.append(name)
         all_ingredients_list.update(ingredients)
 
-    all_ingredients_list = list(all_ingredients_list)
+    all_ingredients_list = sorted(list(all_ingredients_list))
 
     pizzas_ingredients_matrix = np.zeros((len(rows), len(all_ingredients_list)), dtype=np.int8)
     
