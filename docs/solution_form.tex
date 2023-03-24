@@ -1,0 +1,143 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bm}
+
+\DeclareMathOperator*{\argmin}{argmin}
+
+\title{Problem KtoMiPizzęZżera}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+Dane:
+$$
+    n \text{ -- liczba potrzeb}
+$$
+$$
+    m \text{ -- liczba pizz}
+$$
+$$
+    k \text{ -- liczba składników}
+$$
+$$
+    p \text{ -- liczba kawałków w jednej pizzy}
+$$
+$$
+    L_i \text{ -- zbiór składników lubianych dla potrzeby $i$-tej}
+$$
+$$
+    N_i \text{ -- zbiór składników nielubianych dla potrzeby $i$-tej }
+$$
+$$
+    S_i \text{ -- zbiór składników pizzy $i$-tej }
+$$
+$$
+    \pmb{c}_{m \times 1} \text{ -- wektor cen pizz}
+$$
+
+$$
+    \left[ \pmb{A}_{m \times k} \right]_{i,j}
+    = \begin{cases}
+        1 & \text{if $s_j \in S_i$} \\
+        0 & \text{otherwise}
+    \end{cases}
+$$
+$$
+    \left[ \pmb{B}_{n \times k} \right]_{i,j}
+    = \begin{cases}
+        1 & \text{if $s_j \in L_i$} \\
+        0 & \text{otherwise}
+    \end{cases}
+$$
+$$
+    \left[ \pmb{C}_{n \times k} \right]_{i,j}
+    = \begin{cases}
+        1 & \text{if $s_j \in N_i$} \\
+        0 & \text{otherwise}
+    \end{cases}
+$$
+$$
+    \left[ \pmb{B} \pmb{A}^T \right]_{i,j}
+    = \left[ \pmb{D}_{n \times m} \right]_{i,j}
+    = \left| L_i \cap S_j \right|
+$$
+$$  \left[ \pmb{C} \pmb{A}^T \right]_{i,j}
+    = \left[ \pmb{E}_{n \times m} \right]_{i,j}
+    = \left| N_i \cap S_j \right|
+$$
+
+Zapis rozwiązania:
+$$
+    \left[ \pmb{R}_{n \times m} \right]_{i,j}
+    = \begin{cases}
+        1 & \text{if potrzebie $i$-tej została przydzielona pizza $j$-ta} \\
+        0 & \text{otherwise}
+    \end{cases}
+$$
+przy założeniu, że $\pmb{R} ~ \pmb{1}_{m \times 1} = \pmb{1}_{n \times 1}$.
+
+Jakość dopasowania dla każdej potrzeby możemy wyliczyć następująco:
+$$
+    \pmb{d}_{n \times 1} = \left( \pmb{R} \odot \pmb{D} \right) \pmb{1}_{m \times 1}
+$$
+$$
+    \pmb{e}_{n \times 1} = \left( \pmb{R} \odot \pmb{E} \right) \pmb{1}_{m \times 1}
+$$
+gdzie $\odot$ to iloczyn Hadamarda (element-wise multiplication).
+
+Do obliczenia jakości rozwiązania możemy użyć funkcji:
+
+Liczba dopasowań pozytywnych:
+$$
+    f(\pmb{R}) = \pmb{1}_{1 \times n} \pmb{d} = \pmb{1}_{1 \times n} \left( \pmb{R} \odot \pmb{D} \right) \pmb{1}_{m \times 1}
+$$
+
+Liczba dopasowań negatywnych:
+$$
+    g(\pmb{R}) = \pmb{1}_{1 \times n} \pmb{e} = \pmb{1}_{1 \times n} \left( \pmb{R} \odot \pmb{E} \right) \pmb{1}_{m \times 1}
+$$
+
+Liczba kawałków nietworzących całej pizzy:
+$$
+    h(\pmb{R}) = \left( \pmb{1}_{1 \times n} \pmb{R} \bmod p \right) \pmb{1}_{m \times 1}
+$$
+
+Funkcja celu:
+$$
+    \mathcal{F}(\pmb{R}) = \alpha f(\pmb{R}) + \beta g(\pmb{R}) + \gamma h(\pmb{R})
+$$
+
+Warunek:
+$$
+    \sum_{j = 1}^{m} c_j \left\lceil \frac{1}{p} \cdot \sum_{i = 1}^{n} \pmb{R}_{i,j} \right\rceil \leq c_{max}
+$$
+$$
+    \left\lceil \frac{1}{p} \cdot \pmb{1}_{1 \times n} \pmb{R} \right\rceil \pmb{c} \leq c_{max}
+$$
+
+Przestrzeń rozwiązań spełniających powyższy warunek to rodzina macierzy:
+$$
+    \mathcal{R}_{c_{max}}^{n \times m}
+    = \left\{
+    \pmb{R}_{n \times m}
+    ~\middle|~
+    \pmb{R} ~ \pmb{1}_{m \times 1} = \pmb{1}_{n \times 1}
+    \land
+    \left\lceil \frac{1}{p} \cdot \pmb{1}_{1 \times n}  \pmb{R} \right\rceil \pmb{c}
+    \leq c_{max}
+    \right\}
+$$
+
+Szukane:
+$$
+    \pmb{R}^{*}
+    = \argmin_{\pmb{R} \in \mathcal{R}_{c_{max}}^{n \times m}} \mathcal{F}(\pmb{R})
+$$
+
+\end{document}
