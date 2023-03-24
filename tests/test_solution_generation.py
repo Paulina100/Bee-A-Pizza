@@ -1,5 +1,5 @@
 import pytest
-from solution_generation import *
+from bee_a_pizza.solution_generation import *
 
 
 def test_generate_greedy_solution():
