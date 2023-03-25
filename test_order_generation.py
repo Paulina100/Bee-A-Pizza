@@ -38,3 +38,10 @@ def test_generate_preferences():
     assert np.all((preferences >= -1) & (preferences <= 1))
 
 
+def test_assign_customers_to_slices():
+    n_slices_per_customer = [2, 3, 1]
+    slice_assignment = assign_customers_to_slices(
+        n_slices_per_customer=n_slices_per_customer
+    )
+
+    assert np.all(slice_assignment == [0, 0, 1, 1, 1, 2])

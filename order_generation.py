@@ -14,3 +14,16 @@ def generate_preferences(n_customers: int, n_ingredients, avg_likes: int, avg_di
     result = np.where(distribution >= n_ingredients - avg_likes, 1, result)
 
     return result
+
+
+def assign_customers_to_slices(n_slices_per_customer: np.ndarray) -> np.ndarray:
+    n_slices_total = np.sum(n_slices_per_customer)
+    slice_assignment = np.zeros(n_slices_total, dtype='uint8')
+    first_slice = 0
+    last_slice = 0
+    for customer, n_slices in enumerate(n_slices_per_customer):
+        last_slice += n_slices
+        slice_assignment[first_slice:last_slice] = customer
+        first_slice = last_slice
+
+    return slice_assignment
