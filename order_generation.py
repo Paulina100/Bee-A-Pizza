@@ -27,3 +27,8 @@ def assign_customers_to_slices(n_slices_per_customer: np.ndarray) -> np.ndarray:
         first_slice = last_slice
 
     return slice_assignment
+
+
+def get_preferences_by_slice(preferences: np.ndarray, n_slices_per_customer: np.ndarray) -> np.ndarray:
+    slice_assignment = assign_customers_to_slices(n_slices_per_customer=n_slices_per_customer)
+    return preferences[slice_assignment]

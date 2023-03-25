@@ -39,9 +39,32 @@ def test_generate_preferences():
 
 
 def test_assign_customers_to_slices():
-    n_slices_per_customer = [2, 3, 1]
+    n_slices_per_customer = np.array([2, 3, 1])
     slice_assignment = assign_customers_to_slices(
         n_slices_per_customer=n_slices_per_customer
     )
 
     assert np.all(slice_assignment == [0, 0, 1, 1, 1, 2])
+
+
+def test_get_preferences_by_slice():
+    preferences = np.array(
+        [[1, 1, -1],
+         [0, 0, 1],
+         [-1, 0, -1]]
+    )
+    n_slices_per_customer = np.array([2, 3, 1])
+    expected_preferences_by_slice = np.array(
+        [[1, 1, -1],
+         [1, 1, -1],
+         [0, 0, 1],
+         [0, 0, 1],
+         [0, 0, 1],
+         [-1, 0, -1]]
+    )
+    preferences_by_slice = get_preferences_by_slice(
+        preferences=preferences,
+        n_slices_per_customer=n_slices_per_customer
+    )
+
+    assert np.all(preferences_by_slice == expected_preferences_by_slice)
