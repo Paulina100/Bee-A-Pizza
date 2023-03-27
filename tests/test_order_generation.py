@@ -1,5 +1,5 @@
 import pytest
-from order_generation import *
+from bee_a_pizza.order_generation import *
 
 
 def test_generate_n_slices_per_customer():
