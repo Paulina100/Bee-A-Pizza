@@ -10,7 +10,7 @@ def get_slices_pizzas_likes_hates(
 
     Parameters
     ----------
-    `pizzas_ingredients` : (n_pizzas, n_igredients)
+    `pizzas_ingredients` : (n_pizzas, n_ingredients)
     `slices_ingredients_preference` : (n_slices, n_ingredients)
 
     Returns
@@ -46,8 +46,8 @@ def get_number_of_positive_negative_matchings(
     `n_positive_matchings` : int
     `n_negative_matchings` : int
     """
-    n_positive_matchings = np.sum(slices_pizzas_likes * slices_pizzas)
-    n_negative_matchings = np.sum(slices_pizzas_hates * slices_pizzas)
+    n_positive_matchings = np.sum(slices_pizzas_likes * slices_pizzas)[0]
+    n_negative_matchings = np.sum(slices_pizzas_hates * slices_pizzas)[0]
     return n_positive_matchings, n_negative_matchings
 
 
@@ -86,7 +86,7 @@ def get_cost_of_pizzas(
     `cost_of_pizzas` : float
     """
     number_of_pizza_types = get_number_of_pizza_types(slices_pizzas, n_slices_in_pizza)
-    return np.dot(number_of_pizza_types, pizza_prices)
+    return np.dot(number_of_pizza_types, pizza_prices)[0]
 
 
 def get_number_of_slices_non_forming_whole_pizza(
@@ -104,7 +104,7 @@ def get_number_of_slices_non_forming_whole_pizza(
     -------
     `n_slices_not_in_pizza` : int
     """
-    return np.sum(np.mod(np.sum(slices_pizzas, axis=0), n_slices_in_pizza))
+    return np.sum(np.mod(np.sum(slices_pizzas, axis=0), n_slices_in_pizza))[0]
 
 
 def get_slices_pizzas_from_indices(
@@ -147,3 +147,32 @@ def is_pizzas_cost_leq_than_max_cost(
     """
     cost = get_cost_of_pizzas(slices_pizzas, n_slices_in_pizza, pizza_prices)
     return cost <= max_cost
+
+
+def get_fitness(
+    result: np.ndarray,
+    coefs: np.ndarray,
+    pizzas_ingredients: np.ndarray,
+    preferences: np.ndarray,
+    n_slices_in_pizza: int = 8,
+) -> float:
+    slices_pizzas_likes, slices_pizzas_hates = get_slices_pizzas_likes_hates(
+        pizzas_ingredients, preferences
+    )
+    (
+        n_positive_matchings,
+        n_negative_matchings,
+    ) = get_number_of_positive_negative_matchings(
+        slices_pizzas_likes, slices_pizzas_hates, result
+    )
+    number_of_slices_non_forming_whole_pizza = (
+        get_number_of_slices_non_forming_whole_pizza(result, n_slices_in_pizza)
+    )
+    func_vals = np.array(
+        [
+            [n_positive_matchings],
+            [n_negative_matchings],
+            [number_of_slices_non_forming_whole_pizza],
+        ]
+    )
+    return coefs @ func_vals
