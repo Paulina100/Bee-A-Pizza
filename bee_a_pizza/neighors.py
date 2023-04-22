@@ -9,7 +9,9 @@ def swap_slices(results: np.ndarray, n_slices_to_swap: int) -> np.ndarray:
     return results
 
 
-def get_neighbor(results: np.ndarray, search_cycle_proportion: float, pizza_swap_proba: float = 0.5) -> np.ndarray:
+def get_neighbor(
+    results: np.ndarray, search_cycle_proportion: float, pizza_swap_proba: float = 0.5
+) -> np.ndarray:
     """
     Returns a neighbor of the given solution generated either by swap_pizzas() or swap_slices(), chosen randomly
 
