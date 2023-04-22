@@ -46,8 +46,8 @@ def get_number_of_positive_negative_matchings(
     `n_positive_matchings` : int
     `n_negative_matchings` : int
     """
-    n_positive_matchings = np.sum(slices_pizzas_likes * slices_pizzas)[0]
-    n_negative_matchings = np.sum(slices_pizzas_hates * slices_pizzas)[0]
+    n_positive_matchings = np.sum(slices_pizzas_likes * slices_pizzas)
+    n_negative_matchings = np.sum(slices_pizzas_hates * slices_pizzas)
     return n_positive_matchings, n_negative_matchings
 
 
@@ -86,7 +86,7 @@ def get_cost_of_pizzas(
     `cost_of_pizzas` : float
     """
     number_of_pizza_types = get_number_of_pizza_types(slices_pizzas, n_slices_in_pizza)
-    return np.dot(number_of_pizza_types, pizza_prices)[0]
+    return np.dot(number_of_pizza_types, pizza_prices)
 
 
 def get_number_of_slices_non_forming_whole_pizza(
@@ -104,7 +104,34 @@ def get_number_of_slices_non_forming_whole_pizza(
     -------
     `n_slices_not_in_pizza` : int
     """
-    return np.sum(np.mod(np.sum(slices_pizzas, axis=0), n_slices_in_pizza))[0]
+    return np.sum(np.mod(np.sum(slices_pizzas, axis=0), n_slices_in_pizza))
+
+
+def get_number_of_wasted_slices(
+    slices_pizzas: np.ndarray, n_slices_in_pizza: int
+) -> int:
+    """
+    Returns a number of unnecessarily wasted slices.
+
+    Parameters
+    ----------
+    `slices_pizzas` : (n_slices, n_pizzas)
+    `n_slices_in_pizza` : int
+
+    Returns
+    -------
+    `n_wasted_slices` : int
+    """
+
+    n_slices_non_forming_whole_pizza_by_type = np.mod(
+        np.sum(slices_pizzas, axis=0), n_slices_in_pizza
+    )
+    n_wasted_slices_by_type = np.where(
+        n_slices_non_forming_whole_pizza_by_type > 0,
+        n_slices_in_pizza - n_slices_non_forming_whole_pizza_by_type,
+        0,
+    )
+    return np.sum(n_wasted_slices_by_type)
 
 
 def get_slices_pizzas_from_indices(
@@ -150,12 +177,28 @@ def is_pizzas_cost_leq_than_max_cost(
 
 
 def get_fitness(
-    result: np.ndarray,
+    results: np.ndarray,
     coefs: np.ndarray,
     pizzas_ingredients: np.ndarray,
     preferences: np.ndarray,
     n_slices_in_pizza: int = 8,
 ) -> float:
+    """
+    Calculates fitness of the given solution, based on preferences and pizzas' ingredients.
+
+    Parameters
+    ----------
+    `results` : (n_slices, n_pizzas) - solution of which fitness needs to be calculated
+    `coefs` : (3) - array in form of [alpha, beta, gamma], where the values represent coefficients corresponding to the
+        importance of: maximizing liked ingredients, minimizing disliked ingredients and minimizing food waste. Signs of
+        coefs don't matter.
+    `pizzas_ingredients` : (n_pizzas, n_ingredients)
+    `preferences` : (n_slices, n_ingredients)
+    `n_slices_in_pizza` : number of slices pizzas have
+    """
+    coefs = np.abs(coefs)
+    coefs[0] *= -1
+
     slices_pizzas_likes, slices_pizzas_hates = get_slices_pizzas_likes_hates(
         pizzas_ingredients, preferences
     )
@@ -163,16 +206,15 @@ def get_fitness(
         n_positive_matchings,
         n_negative_matchings,
     ) = get_number_of_positive_negative_matchings(
-        slices_pizzas_likes, slices_pizzas_hates, result
+        slices_pizzas_likes, slices_pizzas_hates, results
     )
-    number_of_slices_non_forming_whole_pizza = (
-        get_number_of_slices_non_forming_whole_pizza(result, n_slices_in_pizza)
-    )
+    n_wasted_slices = get_number_of_wasted_slices(results, n_slices_in_pizza)
     func_vals = np.array(
         [
             [n_positive_matchings],
             [n_negative_matchings],
-            [number_of_slices_non_forming_whole_pizza],
+            [n_wasted_slices],
         ]
     )
+
     return coefs @ func_vals
