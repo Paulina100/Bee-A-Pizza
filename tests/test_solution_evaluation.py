@@ -170,3 +170,76 @@ def test_get_number_of_slices_non_forming_whole_pizza():
     assert get_number_of_slices_non_forming_whole_pizza(slices_pizzas, 2) == 2
     assert get_number_of_slices_non_forming_whole_pizza(slices_pizzas, 3) == 2
     assert get_number_of_slices_non_forming_whole_pizza(slices_pizzas, 4) == 4
+
+
+def test_get_number_of_wasted_slices():
+    slices_pizzas = np.array(
+        [
+            [1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 0],
+            [1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 0],
+        ],
+        dtype=np.int8,
+    )
+    slices_pizzas2 = np.array(
+        [
+            [1, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1],
+        ]
+    )
+    assert get_number_of_wasted_slices(slices_pizzas, 1) == 0
+    assert get_number_of_wasted_slices(slices_pizzas, 2) == 2
+    assert get_number_of_wasted_slices(slices_pizzas, 3) == 4
+    assert get_number_of_wasted_slices(slices_pizzas, 4) == 4
+
+    assert get_number_of_wasted_slices(slices_pizzas2, 8) == 27
+
+
+def test_get_fitness():
+    results = np.array(
+        [
+            [1, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1],
+        ]
+    )
+    coefs = np.array([1, 1, 1])
+    pizzas_ingredients = np.array(
+        [
+            [1, 0, 0, 1],
+            [1, 1, 0, 0],
+            [0, 1, 1, 1],
+            [1, 1, 1, 0],
+            [0, 1, 1, 0],
+            [1, 0, 1, 1],
+        ],
+        dtype=np.int8,
+    )
+
+    preferences = np.array(
+        [
+            [-1, 1, 0, 1],
+            [1, -1, -1, -1],
+            [1, 1, -1, -1],
+            [-1, -1, -1, 1],
+            [-1, 1, 1, -1],
+        ],
+        dtype=np.int8,
+    )
+
+    n_likes = 3
+    n_hates = 9
+    n_wasted_slices = 27
+    result = get_fitness(results, coefs, pizzas_ingredients, preferences)
+
+    assert result == -3 + 9 + 27
