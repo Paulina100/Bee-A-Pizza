@@ -32,9 +32,7 @@ def generate_random_solution(
     slices_pizzas = np.zeros((n_slices, n_pizzas))
 
     for _ in range(2 * n_slices * n_pizzas):
-        indices = np.random.randint(
-            np.zeros(n_slices), (n_pizzas - 1) * np.ones(n_slices)
-        )
+        indices = np.random.randint([0] * n_slices, [n_pizzas - 1] * n_slices)
         slices_pizzas = get_slices_pizzas_from_indices(indices, n_pizzas)
         if is_pizzas_cost_leq_than_max_cost(
             slices_pizzas, n_slices_in_pizza, max_cost, pizza_prices
