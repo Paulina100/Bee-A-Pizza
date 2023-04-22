@@ -12,7 +12,7 @@ def test_generate_greedy_solution():
             n_slices_in_pizza=3,
             max_cost=20,
             pizza_prices=prices,
-            random_state=0
+            random_state=0,
         )
 
     try:
@@ -22,7 +22,7 @@ def test_generate_greedy_solution():
             n_slices_in_pizza=3,
             max_cost=1200,
             pizza_prices=prices,
-            random_state=0
+            random_state=0,
         )
         assert True
     except:

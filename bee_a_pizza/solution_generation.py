@@ -9,7 +9,7 @@ def generate_random_solution(
     n_slices_in_pizza: int,
     max_cost: float,
     pizza_prices: np.ndarray,
-    random_state: Optional[int] = None
+    random_state: Optional[int] = None,
 ) -> np.ndarray:
     """
     Returns a random solution in form of a 0-1 matrix.
@@ -32,7 +32,9 @@ def generate_random_solution(
     slices_pizzas = np.zeros((n_slices, n_pizzas))
 
     for _ in range(2 * n_slices * n_pizzas):
-        indices = np.random.randint(np.zeros(n_slices), (n_pizzas-1)*np.ones(n_slices))
+        indices = np.random.randint(
+            np.zeros(n_slices), (n_pizzas - 1) * np.ones(n_slices)
+        )
         slices_pizzas = get_slices_pizzas_from_indices(indices, n_pizzas)
         if is_pizzas_cost_leq_than_max_cost(
             slices_pizzas, n_slices_in_pizza, max_cost, pizza_prices

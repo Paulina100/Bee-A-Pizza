@@ -3,8 +3,7 @@ from typing import Tuple
 
 
 def get_slices_pizzas_likes_hates(
-    pizzas_ingredients: np.ndarray,
-    slices_ingredients_preference: np.ndarray
+    pizzas_ingredients: np.ndarray, slices_ingredients_preference: np.ndarray
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Returns a pair of matrices with pizza to slice fit values.
@@ -31,7 +30,7 @@ def get_slices_pizzas_likes_hates(
 def get_number_of_positive_negative_matchings(
     slices_pizzas_likes: np.ndarray,
     slices_pizzas_hates: np.ndarray,
-    slices_pizzas: np.ndarray
+    slices_pizzas: np.ndarray,
 ) -> Tuple[int, int]:
     """
     Returns a number of positive and negative matchings of pizza to slices.
@@ -53,8 +52,7 @@ def get_number_of_positive_negative_matchings(
 
 
 def get_number_of_pizza_types(
-    slices_pizzas: np.ndarray,
-    n_slices_in_pizza: int
+    slices_pizzas: np.ndarray, n_slices_in_pizza: int
 ) -> np.ndarray:
     """
     Returns a vector with number of whole pizzas.
@@ -72,9 +70,7 @@ def get_number_of_pizza_types(
 
 
 def get_cost_of_pizzas(
-    slices_pizzas: np.ndarray,
-    n_slices_in_pizza: int,
-    pizza_prices: np.ndarray
+    slices_pizzas: np.ndarray, n_slices_in_pizza: int, pizza_prices: np.ndarray
 ) -> float:
     """
     Returns a sum of whole pizzas costs.
@@ -89,16 +85,12 @@ def get_cost_of_pizzas(
     -------
     `cost_of_pizzas` : float
     """
-    number_of_pizza_types = get_number_of_pizza_types(
-        slices_pizzas,
-        n_slices_in_pizza
-    )
+    number_of_pizza_types = get_number_of_pizza_types(slices_pizzas, n_slices_in_pizza)
     return np.dot(number_of_pizza_types, pizza_prices)
 
 
 def get_number_of_slices_non_forming_whole_pizza(
-    slices_pizzas: np.ndarray,
-    n_slices_in_pizza: int
+    slices_pizzas: np.ndarray, n_slices_in_pizza: int
 ) -> int:
     """
     Returns a number of slices that don't form a whole pizza.
@@ -116,8 +108,7 @@ def get_number_of_slices_non_forming_whole_pizza(
 
 
 def get_slices_pizzas_from_indices(
-    slices_pizzas_indices: np.ndarray,
-    n_pizzas: int
+    slices_pizzas_indices: np.ndarray, n_pizzas: int
 ) -> np.ndarray:
     """
     Returns a slices pizzas matrix from a vector of indices of pizzas.
