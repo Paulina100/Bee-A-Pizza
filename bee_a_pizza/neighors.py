@@ -23,8 +23,8 @@ def get_neighbor(
     `pizza_swap_proba` : probability of choosing swap_pizzas() over swap_slices()
     """
     if np.random.rand(1) < pizza_swap_proba:
-        n_pizzas_to_change = results.shape[0] * search_cycle_proportion // 1
+        n_pizzas_to_change = int(results.shape[0] * search_cycle_proportion)
         return swap_pizzas(results, n_pizzas_to_change)
     else:
-        n_slices_to_swap = results.shape[0] * search_cycle_proportion // 1
+        n_slices_to_swap = int(results.shape[0] * search_cycle_proportion)
         return swap_slices(results, n_slices_to_swap)
