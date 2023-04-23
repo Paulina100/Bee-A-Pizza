@@ -4,7 +4,7 @@ App which main purpose is to evenly distribute pizza among users
 """
 
 import csv
-from typing import List, Set, Tuple
+from typing import List, Tuple
 import numpy as np
 
 
@@ -23,12 +23,11 @@ def read_pizza_file(
 
     pizzas_names: List[str] = []
     prices_list: List[float] = []
-    all_ingredients_set: Set[str] = set()
 
     all_ingredients_list = get_ingredients(data_rows)
 
     pizzas_ingredients_matrix = np.zeros(
-        (len(data_rows), len(all_ingredients_set)), dtype=np.int8
+        (len(data_rows), len(all_ingredients_list)), dtype=np.int8
     )
 
     for i, row in enumerate(data_rows):
