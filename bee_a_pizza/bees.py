@@ -1,7 +1,5 @@
-import numpy as np
-
 from bee_a_pizza.solution_generation import *
-from bee_a_pizza.neighbors import get_neighbor
+from bee_a_pizza.neighbours import get_neighbor
 from math import inf
 
 
@@ -32,7 +30,7 @@ def local_search(
             pizzas_ingredients=pizzas,
             preferences=slices,
         )
-        if neighbour_fitness > best_fitness:
+        if neighbour_fitness < best_fitness:
             best_solution = neighbour
             best_fitness = neighbour_fitness
     return best_solution, best_fitness
@@ -79,13 +77,13 @@ def bees_algorithm(
         for solution in possible_solutions
     ]
     best_solution_over_time = [0 for _ in range(generations)]
-    best_fitness = -inf
+    best_fitness = inf
 
     for gen in range(generations):
         # Recruitment
-        possible_solutions.sort(key=lambda x: x[1], reverse=True)
+        possible_solutions.sort(key=lambda x: x[1], reverse=False)
         # Finding new best solution
-        if possible_solutions[0][1] > best_fitness:
+        if possible_solutions[0][1] < best_fitness:
             best_solution_over_time[gen] = possible_solutions[0][0]
             best_fitness = possible_solutions[0][1]
         else:
@@ -103,14 +101,14 @@ def bees_algorithm(
                 elite_foragers_n,
                 possible_solutions[i][2] / local_search_cycles,
             )
-            if new_solution[1] > possible_solutions[i][1]:
+            if new_solution[1] < possible_solutions[i][1]:
                 possible_solutions[i] = [new_solution[0], new_solution[1], 0]
             else:
                 # neighbourhood shrinking
                 possible_solutions[i][2] += 1
                 if possible_solutions[i][2] == local_search_cycles:
                     # site abandonment
-                    possible_solutions[i][1] = -inf
+                    possible_solutions[i][1] = inf
         for i in range(elite_solutions_n, best_solutions_n):
             new_solution = local_search(
                 pizzas,
@@ -122,14 +120,14 @@ def bees_algorithm(
                 best_foragers_n,
                 possible_solutions[i][2] / local_search_cycles,
             )
-            if new_solution[1] > possible_solutions[i][1]:
+            if new_solution[1] < possible_solutions[i][1]:
                 possible_solutions[i] = [new_solution[0], new_solution[1], 0]
             else:
                 # neighbourhood shrinking
                 possible_solutions[i][2] += 1
                 if possible_solutions[i][2] == local_search_cycles:
                     # site abandonment
-                    possible_solutions[i][1] = -inf
+                    possible_solutions[i][1] = inf
         # global search
         for i in range(best_solutions_n, scouts_n):
             possible_solutions[i][0] = generate_random_solution(
@@ -149,7 +147,7 @@ def bees_algorithm(
 
     # Finding new best solution
     possible_solutions.sort(key=lambda x: x[1], reverse=True)
-    if possible_solutions[0][1] > best_fitness:
+    if possible_solutions[0][1] < best_fitness:
         best_solution_over_time[generations - 1] = possible_solutions[0][0]
 
     return best_solution_over_time[generations - 1], best_solution_over_time

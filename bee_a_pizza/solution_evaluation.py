@@ -219,4 +219,4 @@ def get_fitness(
         ]
     )
 
-    return -(coefs @ func_vals)
+    return coefs @ func_vals

@@ -17,12 +17,14 @@ slices = get_preferences_by_slice(preferences, n_slices)
 print(slices.shape)
 max_cost = 1000
 
+coefs = np.arange(1, 4)
+
 result, solutions_list = bees_algorithm(
     pizzas=pizzas,
     slices=slices,
     max_cost=max_cost,
-    pizza_prices=pizza_prices,
-    coefs=np.arange(1, 4),
+    pizza_prices=np.array(pizza_prices),
+    coefs=coefs,
     scouts_n=100,
     best_solutions_n=80,
     elite_solutions_n=30,
@@ -33,19 +35,23 @@ result, solutions_list = bees_algorithm(
 )
 
 print(result)
+
+sum_result = np.sum(result, axis=0)
+print(sum_result)
+
 fitness = get_fitness(
     results=result,
-    coefs=np.arange(1, 4),
+    coefs=coefs,
     pizzas_ingredients=pizzas,
     preferences=slices,
 )[0]
 
-print(fitness)
+print(f"Fitness = {fitness}")
 
 fitness_over_time = [
     get_fitness(
         results=sol,
-        coefs=np.arange(1, 4),
+        coefs=coefs,
         pizzas_ingredients=pizzas,
         preferences=slices,
     )
