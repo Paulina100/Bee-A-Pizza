@@ -1,4 +1,4 @@
-'''Solution evaluation module.'''
+"""Solution evaluation module."""
 
 import numpy as np
 from typing import Tuple
@@ -219,4 +219,4 @@ def get_fitness(
         ]
     )
 
-    return coefs @ func_vals
+    return -(coefs @ func_vals)

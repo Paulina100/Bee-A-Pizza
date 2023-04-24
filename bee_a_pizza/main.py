@@ -22,6 +22,7 @@ result, solutions_list = bees_algorithm(
     slices=slices,
     max_cost=max_cost,
     pizza_prices=pizza_prices,
+    coefs=np.arange(1, 4),
     scouts_n=100,
     best_solutions_n=80,
     elite_solutions_n=30,
@@ -34,17 +35,19 @@ result, solutions_list = bees_algorithm(
 print(result)
 fitness = get_fitness(
     results=result,
-    coefs=np.arange(3),
+    coefs=np.arange(1, 4),
     pizzas_ingredients=pizzas,
     preferences=slices,
 )[0]
 
 print(fitness)
 
-
 fitness_over_time = [
     get_fitness(
-        results=sol, coefs=np.arange(3), pizzas_ingredients=pizzas, preferences=slices
+        results=sol,
+        coefs=np.arange(1, 4),
+        pizzas_ingredients=pizzas,
+        preferences=slices,
     )
     for sol in solutions_list
 ]

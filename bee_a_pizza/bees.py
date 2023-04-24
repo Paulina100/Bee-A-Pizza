@@ -1,9 +1,8 @@
+import numpy as np
+
 from bee_a_pizza.solution_generation import *
 from bee_a_pizza.neighbors import get_neighbor
-
-
-# def find_neighbour(solution: np.ndarray, pizzas: np.ndarray, search_cycle_proportion: float) -> np.ndarray:
-#     pass
+from math import inf
 
 
 def local_search(
@@ -11,6 +10,7 @@ def local_search(
     slices: np.ndarray,
     max_cost: float,
     pizza_prices: np.ndarray,
+    coefs: np.ndarray,
     starting_solution: np.array,
     foragers_n: int,
     search_cycle_proportion: float,
@@ -18,7 +18,7 @@ def local_search(
     best_solution = starting_solution
     best_fitness = get_fitness(
         results=starting_solution,
-        coefs=np.arange(3),
+        coefs=coefs,
         pizzas_ingredients=pizzas,
         preferences=slices,
     )
@@ -28,7 +28,7 @@ def local_search(
         )
         neighbour_fitness = get_fitness(
             results=neighbour,
-            coefs=np.arange(3),
+            coefs=coefs,
             pizzas_ingredients=pizzas,
             preferences=slices,
         )
@@ -38,18 +38,12 @@ def local_search(
     return best_solution, best_fitness
 
 
-# def calculate_fitness(solution: np.ndarray, pizzas: np.ndarray, slices: np.ndarray,
-#                       max_cost: float, pizza_prices: np.ndarray) -> int:
-#     pass
-
-
-# pizzas - array [n,m] n - 0/1 tam gdzie są składniki, m - liczba pizz w menu
-# slices - array [n,m] n - -1/0/1 tam gdzie są składniki, m - liczba sliców, które chcemy otrzymać
 def bees_algorithm(
     pizzas: np.ndarray,
     slices: np.ndarray,
     max_cost: float,
     pizza_prices: np.ndarray,
+    coefs: np.ndarray,
     scouts_n: int,
     best_solutions_n: int,
     elite_solutions_n: int,
@@ -76,7 +70,7 @@ def bees_algorithm(
             solution,
             get_fitness(
                 results=solution,
-                coefs=np.arange(3),
+                coefs=coefs,
                 pizzas_ingredients=pizzas,
                 preferences=slices,
             ),
@@ -84,9 +78,8 @@ def bees_algorithm(
         ]
         for solution in possible_solutions
     ]
-
     best_solution_over_time = [0 for _ in range(generations)]
-    best_fitness = -1
+    best_fitness = -inf
 
     for gen in range(generations):
         # Recruitment
@@ -105,6 +98,7 @@ def bees_algorithm(
                 slices,
                 max_cost,
                 pizza_prices,
+                coefs,
                 possible_solutions[i][0],
                 elite_foragers_n,
                 possible_solutions[i][2] / local_search_cycles,
@@ -116,13 +110,14 @@ def bees_algorithm(
                 possible_solutions[i][2] += 1
                 if possible_solutions[i][2] == local_search_cycles:
                     # site abandonment
-                    possible_solutions[i][1] = 0
+                    possible_solutions[i][1] = -inf
         for i in range(elite_solutions_n, best_solutions_n):
             new_solution = local_search(
                 pizzas,
                 slices,
                 max_cost,
                 pizza_prices,
+                coefs,
                 possible_solutions[i][0],
                 best_foragers_n,
                 possible_solutions[i][2] / local_search_cycles,
@@ -134,7 +129,7 @@ def bees_algorithm(
                 possible_solutions[i][2] += 1
                 if possible_solutions[i][2] == local_search_cycles:
                     # site abandonment
-                    possible_solutions[i][1] = 0
+                    possible_solutions[i][1] = -inf
         # global search
         for i in range(best_solutions_n, scouts_n):
             possible_solutions[i][0] = generate_random_solution(
@@ -146,7 +141,7 @@ def bees_algorithm(
             )
             possible_solutions[i][1] = get_fitness(
                 results=possible_solutions[i][0],
-                coefs=np.arange(3),
+                coefs=coefs,
                 pizzas_ingredients=pizzas,
                 preferences=slices,
             )
