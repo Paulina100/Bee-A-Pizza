@@ -3,6 +3,7 @@ from bee_a_pizza.pizza_calculator import *
 from bee_a_pizza.order_generation import *
 from bee_a_pizza.solution_evaluation import *
 import matplotlib.pyplot as plt
+from time import time
 
 pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file(
     "../data/Pizzas.csv"
@@ -19,6 +20,7 @@ max_cost = 1000
 
 coefs = np.arange(1, 4)
 
+start = time()
 result, solutions_list = bees_algorithm(
     pizzas=pizzas,
     slices=slices,
@@ -33,7 +35,7 @@ result, solutions_list = bees_algorithm(
     local_search_cycles=5,
     generations=100,
 )
-
+end = time()
 print(result)
 
 sum_result = np.sum(result, axis=0)
@@ -46,7 +48,18 @@ fitness = get_fitness(
     preferences=slices,
 )[0]
 
+all_margharitas = np.zeros(result.shape, dtype=int)
+all_margharitas[:, 0] = 1
+fitness_all_margharitas = get_fitness(
+    results=all_margharitas,
+    coefs=coefs,
+    pizzas_ingredients=pizzas,
+    preferences=slices,
+)[0]
+
 print(f"Fitness = {fitness}")
+print(f"Fitness all margharitas = {fitness_all_margharitas}")
+print(f"Time = {end - start}")
 
 fitness_over_time = [
     get_fitness(
