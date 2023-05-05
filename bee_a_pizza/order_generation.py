@@ -1,4 +1,4 @@
-'''Generates random orders for the pizza shop.'''
+"""Generates random orders for the pizza shop."""
 
 import numpy as np
 
