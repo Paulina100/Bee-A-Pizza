@@ -18,7 +18,7 @@ slices = get_preferences_by_slice(preferences, n_slices)
 print(slices.shape)
 max_cost = 1000
 
-coefs = np.arange(1, 4)
+coefs = np.arange(1, 3)
 
 start = time()
 result, solutions_list = bees_algorithm(

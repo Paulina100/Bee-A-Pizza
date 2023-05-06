@@ -56,8 +56,6 @@ def bees_algorithm(
             n_slices=len(slices),
             n_pizzas=len(pizzas),
             n_slices_in_pizza=8,
-            max_cost=max_cost,
-            pizza_prices=pizza_prices,
         )
         for _ in range(scouts_n)
     ]
@@ -134,8 +132,6 @@ def bees_algorithm(
                 n_slices=len(slices),
                 n_pizzas=len(pizzas),
                 n_slices_in_pizza=8,
-                max_cost=max_cost,
-                pizza_prices=pizza_prices,
             )
             possible_solutions[i][1] = get_fitness(
                 results=possible_solutions[i][0],

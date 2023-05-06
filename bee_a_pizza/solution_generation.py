@@ -7,8 +7,6 @@ def generate_random_solution(
     n_slices: int,
     n_pizzas: int,
     n_slices_in_pizza: int,
-    max_cost: float,
-    pizza_prices: np.ndarray,
     random_state: Optional[int] = None,
 ) -> np.ndarray:
     """
@@ -29,17 +27,18 @@ def generate_random_solution(
     """
     np.random.seed(random_state)
 
+    n_types_to_choose = np.ceil(n_slices / n_slices_in_pizza).astype(int)
+
     slices_pizzas = np.zeros((n_slices, n_pizzas))
 
-    for _ in range(2 * n_slices * n_pizzas):
-        indices = np.random.randint([0] * n_slices, [n_pizzas - 1] * n_slices)
-        slices_pizzas = get_slices_pizzas_from_indices(indices, n_pizzas)
-        if is_pizzas_cost_leq_than_max_cost(
-            slices_pizzas, n_slices_in_pizza, max_cost, pizza_prices
-        ):
-            break
+    chosen_types = np.random.randint(0, n_pizzas, n_types_to_choose)
+    chosen_types = np.array(
+        [[chosen_types[i]] * n_slices_in_pizza for i in range(n_types_to_choose)]
+    )
+    chosen_types = chosen_types.reshape(n_types_to_choose * n_slices_in_pizza)
+    chosen_types = chosen_types[:n_slices]
+    np.random.shuffle(chosen_types)
 
-    else:
-        raise ValueError("Random solution not found - max_cost is too low")
+    slices_pizzas[np.arange(n_slices), chosen_types] = 1
 
     return slices_pizzas

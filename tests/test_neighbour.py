@@ -6,7 +6,8 @@ def test_swap_pizzas():
     size = 5
     results = np.eye(size, size)
     n_pizzas_to_change = 2
-    new_results = swap_pizzas(results, n_pizzas_to_change)
+    n_slices_in_pizza = 2
+    new_results = swap_pizzas(results, n_pizzas_to_change, n_slices_in_pizza)
 
     assert np.sum(new_results) == size
     assert np.sum(new_results, axis=1).max() == 1
