@@ -183,7 +183,6 @@ def get_fitness(
     coefs: np.ndarray,
     pizzas_ingredients: np.ndarray,
     preferences: np.ndarray,
-    n_slices_in_pizza: int = 8,
 ) -> float:
     """
     Calculates fitness of the given solution, based on preferences and pizzas' ingredients.
@@ -191,7 +190,7 @@ def get_fitness(
     Parameters
     ----------
     `results` : (n_slices, n_pizzas) - solution of which fitness needs to be calculated
-    `coefs` : (3) - array in form of [alpha, beta, gamma], where the values represent coefficients
+    `coefs` : (2) - array in form of [alpha, beta, gamma], where the values represent coefficients
         corresponding to the importance of: maximizing liked ingredients, minimizing disliked
         ingredients and minimizing food waste. Signs of coefs don't matter.
     `pizzas_ingredients` : (n_pizzas, n_ingredients)
@@ -210,12 +209,10 @@ def get_fitness(
     ) = get_number_of_positive_negative_matchings(
         slices_pizzas_likes, slices_pizzas_hates, results
     )
-    n_wasted_slices = get_number_of_wasted_slices(results, n_slices_in_pizza)
     func_vals = np.array(
         [
             [n_positive_matchings],
             [n_negative_matchings],
-            [n_wasted_slices],
         ]
     )
 
