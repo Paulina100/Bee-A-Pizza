@@ -8,62 +8,99 @@ from math import inf
 from time import time
 
 
-def find_best_params_for_bees(pizzas: np.ndarray,
+def find_best_params_for_bees(
+    pizzas: np.ndarray,
     slices: np.ndarray,
     max_cost: float,
     pizza_prices: np.ndarray,
     coefs: np.ndarray,
-                     scouts_n: list, best_solutions_n: list, elite_solutions_n: list, best_foragers_n: list,
-                     elite_foragers_n: list,
-                     local_search_cycles: list, generations: list, neighbor_swap_proba: list, best_params=None, best_fitness=inf,):
-
-    params_to_optimize = [scouts_n, best_solutions_n, elite_solutions_n, best_foragers_n, elite_foragers_n,
-                          local_search_cycles, generations, neighbor_swap_proba]
+    scouts_n: list,
+    best_solutions_n: list,
+    elite_solutions_n: list,
+    best_foragers_n: list,
+    elite_foragers_n: list,
+    local_search_cycles: list,
+    generations: list,
+    neighbor_swap_proba: list,
+    best_params=None,
+    best_fitness=inf,
+):
+    params_to_optimize = [
+        scouts_n,
+        best_solutions_n,
+        elite_solutions_n,
+        best_foragers_n,
+        elite_foragers_n,
+        local_search_cycles,
+        generations,
+        neighbor_swap_proba,
+    ]
     if best_params is None:
         best_params = [median_high(param) for param in params_to_optimize]
     for i in range(len(params_to_optimize)):
         best_fitness = inf
-        print('Param ', i)
+        print("Param ", i)
         param = params_to_optimize[i]
         for value in param:
-            print('value ', value)
+            print("value ", value)
             old_value = best_params[i]
             if old_value == value:
                 continue
             best_params[i] = value
-            if best_params[0] <= best_params[1] or best_params[1] <= best_params[2] or best_params[3] >= best_params[4]:
+            if (
+                best_params[0] <= best_params[1]
+                or best_params[1] <= best_params[2]
+                or best_params[3] >= best_params[4]
+            ):
                 best_params[i] = old_value
                 continue
-            solution, l_sol = bees_algorithm(pizzas=pizzas,
-    slices=slices,
-    max_cost=max_cost,
-    pizza_prices=pizza_prices,
-    coefs=coefs,
-                                             scouts_n=best_params[0], best_solutions_n=best_params[1],
-                                             elite_solutions_n=best_params[2],
-                                             best_foragers_n=best_params[3], elite_foragers_n=best_params[4],
-                                             local_search_cycles=best_params[5], generations=best_params[6],
-                                             neighbor_swap_proba=best_params[7])
-            fitness = get_fitness(results=solution, coefs=coefs,
-                                  pizzas_ingredients=pizzas,
-                                  preferences=slices,)
+            solution, l_sol = bees_algorithm(
+                pizzas=pizzas,
+                slices=slices,
+                max_cost=max_cost,
+                pizza_prices=pizza_prices,
+                coefs=coefs,
+                scouts_n=best_params[0],
+                best_solutions_n=best_params[1],
+                elite_solutions_n=best_params[2],
+                best_foragers_n=best_params[3],
+                elite_foragers_n=best_params[4],
+                local_search_cycles=best_params[5],
+                generations=best_params[6],
+                neighbor_swap_proba=best_params[7],
+            )
+            fitness = get_fitness(
+                results=solution,
+                coefs=coefs,
+                pizzas_ingredients=pizzas,
+                preferences=slices,
+            )
             if fitness < best_fitness:
                 best_fitness = fitness
             else:
                 best_params[i] = old_value
-        print('params: ', best_params)
-        print('fitness: ', best_fitness)
+        print("params: ", best_params)
+        print("fitness: ", best_fitness)
     return best_params, best_fitness
 
 
-def find_best_coefs(pizzas: np.ndarray,
+def find_best_coefs(
+    pizzas: np.ndarray,
     slices: np.ndarray,
     max_cost: float,
     pizza_prices: np.ndarray,
     coefs: np.ndarray,
-                     scouts_n: int, best_solutions_n: int, elite_solutions_n: int, best_foragers_n: int,
-                     elite_foragers_n: int,
-                     local_search_cycles: int, generations: int, neighbor_swap_proba_n: float, best_coefs=None, best_fitness=inf):
+    scouts_n: int,
+    best_solutions_n: int,
+    elite_solutions_n: int,
+    best_foragers_n: int,
+    elite_foragers_n: int,
+    local_search_cycles: int,
+    generations: int,
+    neighbor_swap_proba_n: float,
+    best_coefs=None,
+    best_fitness=inf,
+):
     if best_coefs is None:
         best_coefs = np.array([median_high(coef) for coef in coefs])
 
@@ -78,25 +115,33 @@ def find_best_coefs(pizzas: np.ndarray,
             if old_value == value:
                 continue
             best_coefs[i] = value
-            solution, l_sol = bees_algorithm(pizzas=pizzas,
-                                             slices=slices,
-                                             max_cost=max_cost,
-                                             pizza_prices=pizza_prices,
-                                             coefs=best_coefs,
-                                             scouts_n=scouts_n, best_solutions_n=best_solutions_n,
-                                             elite_solutions_n=elite_solutions_n,
-                                             best_foragers_n=best_foragers_n, elite_foragers_n=elite_foragers_n,
-                                             neighbor_swap_proba=neighbor_swap_proba_n,
-                                             local_search_cycles=local_search_cycles, generations=generations)
-            fitness = get_fitness(results=solution, coefs=best_coefs,
-                                  pizzas_ingredients=pizzas,
-                                  preferences=slices, )
+            solution, l_sol = bees_algorithm(
+                pizzas=pizzas,
+                slices=slices,
+                max_cost=max_cost,
+                pizza_prices=pizza_prices,
+                coefs=best_coefs,
+                scouts_n=scouts_n,
+                best_solutions_n=best_solutions_n,
+                elite_solutions_n=elite_solutions_n,
+                best_foragers_n=best_foragers_n,
+                elite_foragers_n=elite_foragers_n,
+                neighbor_swap_proba=neighbor_swap_proba_n,
+                local_search_cycles=local_search_cycles,
+                generations=generations,
+            )
+            fitness = get_fitness(
+                results=solution,
+                coefs=best_coefs,
+                pizzas_ingredients=pizzas,
+                preferences=slices,
+            )
             if fitness < best_fitness:
                 best_fitness = fitness
             else:
                 best_coefs[i] = old_value
-            print('coefs: ', best_coefs)
-            print('fitness: ', best_fitness)
+            print("coefs: ", best_coefs)
+            print("fitness: ", best_fitness)
     return best_coefs, best_fitness
 
 
@@ -117,13 +162,22 @@ max_cost = 1000
 coefs = np.arange(1, 3)
 
 start = time()
-params = find_best_params_for_bees(pizzas=pizzas,  slices=slices,
+params = find_best_params_for_bees(
+    pizzas=pizzas,
+    slices=slices,
     max_cost=max_cost,
     pizza_prices=np.array(pizza_prices),
     coefs=coefs,
-                          scouts_n=list(range(40, 100, 10)), best_solutions_n=list(range(30, 70, 10)), elite_solutions_n=list(range(10, 60, 10)),
-                          best_foragers_n=list(range(5, 20, 5)), elite_foragers_n=list(range(10, 50, 10)), local_search_cycles=list(range(2, 10, 2)),
-                          generations=list((180, 200, 10)), neighbor_swap_proba=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], best_params=[80, 50, 20, 10, 30, 6, 180, 0.3])
+    scouts_n=list(range(40, 100, 10)),
+    best_solutions_n=list(range(30, 70, 10)),
+    elite_solutions_n=list(range(10, 60, 10)),
+    best_foragers_n=list(range(5, 20, 5)),
+    elite_foragers_n=list(range(10, 50, 10)),
+    local_search_cycles=list(range(2, 10, 2)),
+    generations=list((180, 200, 10)),
+    neighbor_swap_proba=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+    best_params=[80, 50, 20, 10, 30, 6, 180, 0.3],
+)
 end = time()
 print("\nTime: ", end - start)
 print("Best params:")

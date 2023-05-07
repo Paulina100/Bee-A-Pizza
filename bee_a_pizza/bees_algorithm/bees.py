@@ -23,7 +23,9 @@ def local_search(
     )
     for forager in range(foragers_n):
         neighbour = get_neighbor(
-            results=starting_solution, search_cycle_proportion=search_cycle_proportion, pizza_swap_proba=neighbor_swap_proba
+            results=starting_solution,
+            search_cycle_proportion=search_cycle_proportion,
+            pizza_swap_proba=neighbor_swap_proba,
         )
         neighbour_fitness = get_fitness(
             results=neighbour,
@@ -42,15 +44,15 @@ def bees_algorithm(
     slices: np.ndarray,
     max_cost: float,
     pizza_prices: np.ndarray,
-    coefs: np.ndarray=np.array([1, 2]),
-    scouts_n: int=80,
-    best_solutions_n: int=50,
-    elite_solutions_n: int=10,
-    best_foragers_n: int=10,
-    elite_foragers_n: int=40,
-    local_search_cycles: int=8,
-    generations: int=125,
-    neighbor_swap_proba: float = 0.3
+    coefs: np.ndarray = np.array([1, 2]),
+    scouts_n: int = 80,
+    best_solutions_n: int = 50,
+    elite_solutions_n: int = 10,
+    best_foragers_n: int = 10,
+    elite_foragers_n: int = 40,
+    local_search_cycles: int = 8,
+    generations: int = 125,
+    neighbor_swap_proba: float = 0.3,
 ):
     # initializing possible solutions
     possible_solutions = [
@@ -100,7 +102,7 @@ def bees_algorithm(
                 possible_solutions[i][0],
                 elite_foragers_n,
                 possible_solutions[i][2] / local_search_cycles,
-                neighbor_swap_proba
+                neighbor_swap_proba,
             )
             if new_solution[1] < possible_solutions[i][1]:
                 possible_solutions[i] = [new_solution[0], new_solution[1], 0]
@@ -120,7 +122,7 @@ def bees_algorithm(
                 possible_solutions[i][0],
                 best_foragers_n,
                 possible_solutions[i][2] / local_search_cycles,
-                neighbor_swap_proba
+                neighbor_swap_proba,
             )
             if new_solution[1] < possible_solutions[i][1]:
                 possible_solutions[i] = [new_solution[0], new_solution[1], 0]
