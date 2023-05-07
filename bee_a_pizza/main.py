@@ -61,15 +61,15 @@ print(f"Fitness = {fitness}")
 print(f"Fitness all margharitas = {fitness_all_margharitas}")
 print(f"Time = {end - start}")
 
-fitness_over_time = [
-    get_fitness(
-        results=sol,
-        coefs=coefs,
-        pizzas_ingredients=pizzas,
-        preferences=slices,
-    )
-    for sol in solutions_list
-]
-
-plt.plot(fitness_over_time)
-plt.show()
+# fitness_over_time = [
+#     get_fitness(
+#         results=sol,
+#         coefs=coefs,
+#         pizzas_ingredients=pizzas,
+#         preferences=slices,
+#     )
+#     for sol in solutions_list
+# ]
+#
+# plt.plot(fitness_over_time)
+# plt.show()
