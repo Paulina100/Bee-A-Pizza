@@ -1,5 +1,5 @@
 import numpy as np
-from bee_a_pizza.neighbours import swap_pizzas, swap_slices, get_neighbor
+from bee_a_pizza.bees_algorithm.neighbors import swap_pizzas, swap_slices, get_neighbor
 
 
 def test_swap_pizzas():

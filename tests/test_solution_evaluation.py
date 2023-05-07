@@ -1,5 +1,4 @@
-import pytest
-from bee_a_pizza.solution_evaluation import *
+from bee_a_pizza.bees_algorithm.solution_evaluation import *
 
 
 def test_get_slices_pizzas_likes_hates():
