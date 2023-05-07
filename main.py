@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from time import time
 
 pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file(
-    "../data/Pizzas.csv"
+    "data/Pizzas.csv"
 )
 print(pizzas.shape)
 
