@@ -1,6 +1,5 @@
 from typing import Optional
-import numpy as np
-from bee_a_pizza.solution_evaluation import *
+from bee_a_pizza.bees_algorithm.solution_evaluation import *
 
 
 def generate_random_solution(

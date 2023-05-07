@@ -1,6 +1,4 @@
-import numpy as np
-import pytest
-from bee_a_pizza.solution_generation import *
+from bee_a_pizza.bees_algorithm.solution_generation import *
 
 
 def test_generate_random_solution():
