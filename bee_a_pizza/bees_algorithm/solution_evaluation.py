@@ -190,9 +190,9 @@ def get_fitness(
     Parameters
     ----------
     `results` : (n_slices, n_pizzas) - solution of which fitness needs to be calculated
-    `coefs` : (2) - array in form of [alpha, beta, gamma], where the values represent coefficients
+    `coefs` : (2) - array in form of [alpha, beta], where the values represent coefficients
         corresponding to the importance of: maximizing liked ingredients, minimizing disliked
-        ingredients and minimizing food waste. Signs of coefs don't matter.
+        ingredients. Signs of coefs don't matter.
     `pizzas_ingredients` : (n_pizzas, n_ingredients)
     `preferences` : (n_slices, n_ingredients)
     `n_slices_in_pizza` : number of slices pizzas have
