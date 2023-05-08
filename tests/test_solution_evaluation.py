@@ -212,7 +212,7 @@ def test_get_fitness():
             [0, 0, 0, 0, 0, 1],
         ]
     )
-    coefs = np.array([1, 1, 1])
+    coefs = np.array([1, 1])
     pizzas_ingredients = np.array(
         [
             [1, 0, 0, 1],
@@ -238,7 +238,6 @@ def test_get_fitness():
 
     n_likes = 3
     n_hates = 9
-    n_wasted_slices = 27
     result = get_fitness(results, coefs, pizzas_ingredients, preferences)
 
-    assert result == -3 + 9 + 27
+    assert result == -3 + 9
