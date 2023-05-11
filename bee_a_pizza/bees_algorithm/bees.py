@@ -1,6 +1,7 @@
-from bee_a_pizza.bees_algorithm.solution_generation import *
-from bee_a_pizza.bees_algorithm.neighbors import get_neighbor
 from math import inf
+
+from bee_a_pizza.bees_algorithm.neighbors import get_neighbor
+from bee_a_pizza.bees_algorithm.solution_generation import *
 
 
 def local_search(

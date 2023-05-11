@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLineEdit
 
 
-class IntNumberEntry(QHBoxLayout):
+class NumberEntry(QHBoxLayout):
     def __init__(
         self,
         label_text: str,
@@ -11,6 +11,7 @@ class IntNumberEntry(QHBoxLayout):
         max_value: int = 1000,
         var_name: str = None,
         params: dict = None,
+        parse_function=int,
     ):
         super().__init__()
 
@@ -39,5 +40,6 @@ class IntNumberEntry(QHBoxLayout):
                 min_value,
                 max_value,
                 var_name,
+                parse_function,
             )
         )
