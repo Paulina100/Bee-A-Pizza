@@ -5,11 +5,11 @@ from bee_a_pizza.bees_algorithm.solution_evaluation import *
 import matplotlib.pyplot as plt
 from time import time
 
-pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file(
-    "data/Pizzas.csv"
-)
+# load pizzas
+pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file("data/Pizzas.csv")
 print(pizzas.shape)
 
+# generate slices
 n_slices = generate_n_slices_per_customer(min_slices=2, max_slices=5, n_customers=15)
 preferences = generate_preferences(
     n_customers=15, n_ingredients=pizzas.shape[1], avg_likes=7, avg_dislikes=7
@@ -20,6 +20,7 @@ max_cost = 1000
 
 coefs = np.array([1, 2])
 
+# solve
 start = time()
 result, solutions_list = bees_algorithm(
     pizzas=pizzas,
