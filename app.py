@@ -289,12 +289,26 @@ class MainWindow(QMainWindow):
         )
         solution_parameters_grid.addLayout(neighbour_swap_probability_hbox, 4, 1)
 
+        # max cost
+        max_cost_hbox = NumberEntry(
+            "Max cost",
+            self.parameter_text_edited_action,
+            default_value=100,
+            min_value=1,
+            max_value=100000,
+            var_name="max_cost",
+            params=self.parameters,
+            parse_function=float,
+        )
+        solution_parameters_grid.addLayout(max_cost_hbox, 5, 0)
+
         solve_button_hbox = QHBoxLayout()
         left_layout.addLayout(solve_button_hbox)
 
         self.solve_button = QPushButton("Solve")
         solve_button_hbox.addWidget(self.solve_button)
-        self.solve_button.clicked.connect(self.solve)
+        # self.solve_button.clicked.connect(self.solve)
+        self.solve_button.clicked.connect(self.solve_threaded)
 
         self.solve_button_error_label = QLabel("")
         solve_button_hbox.addWidget(self.solve_button_error_label)
@@ -304,6 +318,9 @@ class MainWindow(QMainWindow):
         self.canvas = MplCanvas(self, width=6, height=5, dpi=100)
         # self.canvas.axes.plot([0, 1, 2, 3, 4], [10, 1, 20, 3, 40])
         main_layout.addWidget(self.canvas)
+
+    def setup_ui(self):
+        pass
 
     def open_file_dialog(self):
         fname = QFileDialog.getOpenFileName(self, "Open file", ".", "CSV files (*.csv)")
@@ -396,9 +413,16 @@ class MainWindow(QMainWindow):
         self.generate_button_error_label.setText("Successfully generated slices.")
         print("good so far")
 
+    def solve_threaded(self):
+        if self.parameters["slices"] is None or self.parameters["pizzas"] is None:
+            self.solve_button_error_label.setText("Error: No slices generated")
+            return
 
+        self.solve_button_error_label.setText("Solving...")
+        cost_function_coefficients = np.array(
+            [self.parameters["alpha"], self.parameters["beta"]]
+        )
 
-    def solve_in_thread(self):
         self.thread = QThread()
         self.worker = SolutionWorker(self.parameters)
         self.worker.moveToThread(self.thread)
@@ -411,68 +435,17 @@ class MainWindow(QMainWindow):
 
         self.solve_button_error_label.setText("Solving...")
         self.solve_button.setEnabled(False)
+        self.thread.finished.connect(lambda: self.finish_solve())
 
-        self.thread.finished.connect(
-            lambda: self.solve_button_error_label.setText("Solved!")
-        )
-
-        self.thread.finished.connect(lambda: self.solve_button.setEnabled(True))
-
-
-
-    def solve(self):
-        logging.info("Solving...")
-        if self.parameters["slices"] is None:
-            logging.info("Error: No slices generated")
-            self.solve_button_error_label.setText("Error: No slices generated")
-            return
-        self.solve_button_error_label.setText("Solving...")
-        cost_function_coefficients = np.array(
-            [self.parameters["alpha"], self.parameters["beta"]]
-        )
-        result, solutions_list = bees_algorithm(
-            pizzas=self.parameters["pizzas"],
-            slices=self.parameters["slices"],
-            max_cost=1000,
-            pizza_prices=np.array(self.parameters["pizza_prices"]),
-            coefs=cost_function_coefficients,
-            scouts_n=self.parameters["scouts_n"],
-            best_solutions_n=self.parameters["best_solutions_n"],
-            elite_solutions_n=self.parameters["elite_solutions_n"],
-            best_foragers_n=self.parameters["best_foragers_n"],
-            elite_foragers_n=self.parameters["elite_foragers_n"],
-            local_search_cycles=self.parameters["local_search_cycles"],
-            generations=self.parameters["generations"],
-            neighbor_swap_proba=self.parameters["neighbour_swap_probability"],
-        )
+    def finish_solve(self):
         self.solve_button_error_label.setText("Solved!")
-        logging.info("Solved!")
+        self.solve_button.setEnabled(True)
+        self.plot(self.worker.fitness_over_time)
 
-        print(result)
-        print(solutions_list)
-        print(result.shape)
-        print(len(solutions_list))  # number of iterations
-        print("First solution shape:")
-        print(solutions_list[0])  # number of solutions per iteration
-
-        fitness_over_time = [
-            get_fitness(
-                results=sol,
-                coefs=cost_function_coefficients,
-                pizzas_ingredients=self.parameters["pizzas"],
-                preferences=self.parameters["slices"],
-            )
-            for sol in solutions_list
-        ]
-
-        print("Calculated fitness over time")
-
-        # TODO fix error - bad shape
-
+    def plot(self, fitness_over_time):
         self.canvas.axes.clear()
         self.canvas.axes.plot(fitness_over_time)
         self.canvas.draw()
-
 
 
 if __name__ == "__main__":
