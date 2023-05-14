@@ -6,11 +6,11 @@ class NumberEntry(QHBoxLayout):
     def __init__(
         self,
         label_text: str,
-        default_value: int = 0,
+        var_name: str,
+        params: dict,
+        default_value: int = 1,
         min_value: int = 0,
         max_value: int = 1000,
-        var_name: str = None,
-        params: dict = None,
         parse_function=int,
     ):
         super().__init__()
@@ -58,7 +58,7 @@ class NumberEntry(QHBoxLayout):
 
         # Checking constraints
         if parameter < 0:
-            self.error_label.setText("Error: %s must be positive", self.parameter_name)
+            self.error_label.setText(f"Error: {self.parameter_name} must be positive")
             logging.info("Error: %s must be positive", self.parameter_name)
             parameters[self.parameter_name] = None
             return

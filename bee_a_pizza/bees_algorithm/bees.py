@@ -10,7 +10,7 @@ def local_search(
     max_cost: float,
     pizza_prices: np.ndarray,
     coefs: np.ndarray,
-    starting_solution: np.array,
+    starting_solution: np.ndarray,
     foragers_n: int,
     search_cycle_proportion: float,
     neighbor_swap_proba: float = 0.5,
