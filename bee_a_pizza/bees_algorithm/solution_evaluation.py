@@ -216,4 +216,5 @@ def get_fitness(
         ]
     )
 
-    return coefs @ func_vals
+    return float(coefs @ func_vals)
+    
