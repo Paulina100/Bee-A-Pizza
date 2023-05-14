@@ -3,15 +3,15 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLineEdit
 
 class NumberEntry(QHBoxLayout):
     def __init__(
-        self,
-        label_text: str,
-        function,
-        default_value: int = 0,
-        min_value: int = 0,
-        max_value: int = 1000,
-        var_name: str = None,
-        params: dict = None,
-        parse_function=int,
+            self,
+            label_text: str,
+            function,
+            default_value: int = 0,
+            min_value: int = 0,
+            max_value: int = 1000,
+            var_name: str = None,
+            params: dict = None,
+            parse_function=int,
     ):
         super().__init__()
 

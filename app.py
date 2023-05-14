@@ -2,6 +2,7 @@ import logging
 import sys
 from collections import defaultdict
 
+from PyQt5.QtCore import QThread
 import PyQt5.QtGui as QtGui
 import numpy as np
 from PyQt5.QtWidgets import (
@@ -13,18 +14,21 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QFileDialog,
+    QGridLayout,
 )
 
-from bees_algorithm.bees import bees_algorithm
-from components.canvas import MplCanvas
-from components.entry import NumberEntry
-from generators.order_generation import (
+
+from bee_a_pizza.bees_algorithm.bees import bees_algorithm
+from bee_a_pizza.app_components.canvas import MplCanvas
+from bee_a_pizza.app_components.entry import NumberEntry
+from bee_a_pizza.app_components.solving_thread import SolutionWorker
+from bee_a_pizza.generators.order_generation import (
     generate_n_slices_per_customer,
     generate_preferences,
     get_preferences_by_slice,
 )
-from import_export.import_pizzas import read_pizza_file
-from bees_algorithm.solution_evaluation import get_fitness
+from bee_a_pizza.import_export.import_pizzas import read_pizza_file
+from bee_a_pizza.bees_algorithm.solution_evaluation import get_fitness
 
 
 class MainWindow(QMainWindow):
@@ -80,6 +84,10 @@ class MainWindow(QMainWindow):
         left_layout.addWidget(self.left_label_4)
         self.left_label_4.setFont(QtGui.QFont("SansSerif", 15))
 
+        # generation_parameters grid
+        generation_parameters_grid = QGridLayout()
+        left_layout.addLayout(generation_parameters_grid)
+
         n_customers_hbox = NumberEntry(
             "Number of customers",
             self.parameter_text_edited_action,
@@ -89,9 +97,7 @@ class MainWindow(QMainWindow):
             var_name="n_customers",
             params=self.parameters,
         )
-        left_layout.addLayout(n_customers_hbox)
-
-        print(self.parameters)
+        generation_parameters_grid.addLayout(n_customers_hbox, 0, 0)
 
         min_slices_hbox = NumberEntry(
             "Minimum number of slices",
@@ -101,7 +107,7 @@ class MainWindow(QMainWindow):
             var_name="min_slices",
             params=self.parameters,
         )
-        left_layout.addLayout(min_slices_hbox)
+        generation_parameters_grid.addLayout(min_slices_hbox, 1, 0)
 
         # max_slices
         max_slices_hbox = NumberEntry(
@@ -112,7 +118,7 @@ class MainWindow(QMainWindow):
             var_name="max_slices",
             params=self.parameters,
         )
-        left_layout.addLayout(max_slices_hbox)
+        generation_parameters_grid.addLayout(max_slices_hbox, 1, 1)
 
         # avg_likes
         avg_likes_hbox = NumberEntry(
@@ -123,7 +129,7 @@ class MainWindow(QMainWindow):
             var_name="avg_likes",
             params=self.parameters,
         )
-        left_layout.addLayout(avg_likes_hbox)
+        generation_parameters_grid.addLayout(avg_likes_hbox, 2, 0)
 
         # avg_dislikes
         avg_dislikes_hbox = NumberEntry(
@@ -134,7 +140,7 @@ class MainWindow(QMainWindow):
             var_name="avg_dislikes",
             params=self.parameters,
         )
-        left_layout.addLayout(avg_dislikes_hbox)
+        generation_parameters_grid.addLayout(avg_dislikes_hbox, 2, 1)
 
         # slice generator button
         generator_button_hbox = QHBoxLayout()
@@ -153,6 +159,10 @@ class MainWindow(QMainWindow):
         left_layout.addWidget(left_label_5)
         left_label_5.setFont(QtGui.QFont("SansSerif", 15))
 
+        # solution_parameters grid
+        solution_parameters_grid = QGridLayout()
+        left_layout.addLayout(solution_parameters_grid)
+
         alpha_hbox = NumberEntry(
             "Alpha",
             self.parameter_text_edited_action,
@@ -162,7 +172,7 @@ class MainWindow(QMainWindow):
             params=self.parameters,
             parse_function=float,
         )
-        left_layout.addLayout(alpha_hbox)
+        solution_parameters_grid.addLayout(alpha_hbox, 0, 0)
 
         beta_hbox = NumberEntry(
             "Beta",
@@ -173,14 +183,118 @@ class MainWindow(QMainWindow):
             params=self.parameters,
             parse_function=float,
         )
-        left_layout.addLayout(beta_hbox)
+        solution_parameters_grid.addLayout(beta_hbox, 0, 1)
+
+        # scouts_number
+        scouts_number_hbox = NumberEntry(
+            "Number of scouts",
+            self.parameter_text_edited_action,
+            default_value=80,
+            min_value=10,
+            max_value=1000,
+            var_name="scouts_n",
+            params=self.parameters,
+            parse_function=int,
+        )
+        solution_parameters_grid.addLayout(scouts_number_hbox, 1, 0)
+
+        # best_solutions_number
+        best_solutions_number_hbox = NumberEntry(
+            "Number of best solutions",
+            self.parameter_text_edited_action,
+            default_value=50,
+            min_value=1,
+            max_value=1000,
+            var_name="best_solutions_n",
+            params=self.parameters,
+            parse_function=int,
+        )
+        solution_parameters_grid.addLayout(best_solutions_number_hbox, 1, 1)
+
+        # elite_solutions_number
+        elite_solutions_number_hbox = NumberEntry(
+            "Number of elite solutions",
+            self.parameter_text_edited_action,
+            default_value=10,
+            min_value=5,
+            max_value=1000,
+            var_name="elite_solutions_n",
+            params=self.parameters,
+            parse_function=int,
+        )
+        solution_parameters_grid.addLayout(elite_solutions_number_hbox, 2, 0)
+
+        # best_foragers_number
+        best_foragers_number_hbox = NumberEntry(
+            "Number of best foragers",
+            self.parameter_text_edited_action,
+            default_value=10,
+            min_value=5,
+            max_value=1000,
+            var_name="best_foragers_n",
+            params=self.parameters,
+            parse_function=int,
+        )
+        solution_parameters_grid.addLayout(best_foragers_number_hbox, 2, 1)
+
+        # elite_foragers_number
+        elite_foragers_number_hbox = NumberEntry(
+            "Number of elite foragers",
+            self.parameter_text_edited_action,
+            default_value=10,
+            min_value=5,
+            max_value=1000,
+            var_name="elite_foragers_n",
+            params=self.parameters,
+            parse_function=int,
+        )
+        solution_parameters_grid.addLayout(elite_foragers_number_hbox, 3, 0)
+
+        # local_search_cycles
+        local_search_cycles_hbox = NumberEntry(
+            "Number of local search cycles",
+            self.parameter_text_edited_action,
+            default_value=8,
+            min_value=1,
+            max_value=1000,
+            var_name="local_search_cycles",
+            params=self.parameters,
+            parse_function=int,
+        )
+        solution_parameters_grid.addLayout(local_search_cycles_hbox, 3, 1)
+
+        # generations_number
+        generations_number_hbox = NumberEntry(
+            "Number of generations",
+            self.parameter_text_edited_action,
+            default_value=150,
+            min_value=1,
+            max_value=1000,
+            var_name="generations",
+            params=self.parameters,
+            parse_function=int,
+        )
+        solution_parameters_grid.addLayout(generations_number_hbox, 4, 0)
+
+        # neighbour_swap_probability
+        neighbour_swap_probability_hbox = NumberEntry(
+            "Neighbour swap probability",
+            self.parameter_text_edited_action,
+            default_value=0.3,
+            min_value=0,
+            max_value=1,
+            var_name="neighbour_swap_probability",
+            params=self.parameters,
+            parse_function=float,
+        )
+        solution_parameters_grid.addLayout(neighbour_swap_probability_hbox, 4, 1)
 
         solve_button_hbox = QHBoxLayout()
         left_layout.addLayout(solve_button_hbox)
 
-        solve_button = QPushButton("Solve")
-        solve_button_hbox.addWidget(solve_button)
-        solve_button.clicked.connect(self.solve)
+        self.solve_button = QPushButton("Solve")
+        solve_button_hbox.addWidget(self.solve_button)
+        self.solve_button.clicked.connect(self.solve)
 
         self.solve_button_error_label = QLabel("")
         solve_button_hbox.addWidget(self.solve_button_error_label)
@@ -188,7 +302,7 @@ class MainWindow(QMainWindow):
 
         # right layout
         self.canvas = MplCanvas(self, width=6, height=5, dpi=100)
-        self.canvas.axes.plot([0, 1, 2, 3, 4], [10, 1, 20, 3, 40])
+        # self.canvas.axes.plot([0, 1, 2, 3, 4], [10, 1, 20, 3, 40])
         main_layout.addWidget(self.canvas)
 
     def open_file_dialog(self):
@@ -282,6 +396,30 @@ class MainWindow(QMainWindow):
         self.generate_button_error_label.setText("Successfully generated slices.")
         print("good so far")
 
+
+
+    def solve_in_thread(self):
+        self.thread = QThread()
+        self.worker = SolutionWorker(self.parameters)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+
+        self.thread.start()
+
+        self.solve_button_error_label.setText("Solving...")
+        self.solve_button.setEnabled(False)
+
+        self.thread.finished.connect(
+            lambda: self.solve_button_error_label.setText("Solved!")
+        )
+
+        self.thread.finished.connect(lambda: self.solve_button.setEnabled(True))
+
+
+
     def solve(self):
         logging.info("Solving...")
         if self.parameters["slices"] is None:
@@ -289,38 +427,52 @@ class MainWindow(QMainWindow):
             self.solve_button_error_label.setText("Error: No slices generated")
             return
         self.solve_button_error_label.setText("Solving...")
-        coefs = np.array([self.parameters["alpha"], self.parameters["beta"]])
+        cost_function_coefficients = np.array(
+            [self.parameters["alpha"], self.parameters["beta"]]
+        )
         result, solutions_list = bees_algorithm(
             pizzas=self.parameters["pizzas"],
             slices=self.parameters["slices"],
-            pizza_prices=np.array(self.parameters["pizza_prices"]),
-            coefs=coefs,
             max_cost=1000,
-            # scouts_n=self.parameters["scouts_n"],
-            # best_solutions_n=self.parameters["best_solutions_n"],
-            # elite_solutions_n=self.parameters["elite_solutions_n"],
-            # best_foragers_n=self.parameters["best_foragers_n"],
-            # elite_foragers_n=self.parameters["elite_foragers_n"],
-            # local_search_cycles=self.parameters["local_search_cycles"],
-            # generations=self.parameters["generations"],
-            # neighbor_swap_proba=self.parameters["neighbor_swap_proba"],
+            pizza_prices=np.array(self.parameters["pizza_prices"]),
+            coefs=cost_function_coefficients,
+            scouts_n=self.parameters["scouts_n"],
+            best_solutions_n=self.parameters["best_solutions_n"],
+            elite_solutions_n=self.parameters["elite_solutions_n"],
+            best_foragers_n=self.parameters["best_foragers_n"],
+            elite_foragers_n=self.parameters["elite_foragers_n"],
+            local_search_cycles=self.parameters["local_search_cycles"],
+            generations=self.parameters["generations"],
+            neighbor_swap_proba=self.parameters["neighbour_swap_probability"],
         )
         self.solve_button_error_label.setText("Solved!")
         logging.info("Solved!")
 
+        print(result)
+        print(solutions_list)
+        print(result.shape)
+        print(len(solutions_list))  # number of iterations
+        print("First solution shape:")
+        print(solutions_list[0])  # number of solutions per iteration
+
+        fitness_over_time = [
+            get_fitness(
+                results=sol,
+                coefs=cost_function_coefficients,
+                pizzas_ingredients=self.parameters["pizzas"],
+                preferences=self.parameters["slices"],
+            )
+            for sol in solutions_list
+        ]
+
+        print("Calculated fitness over time")
+
         # TODO fix error - bad shape
-        # fitness_over_time = [
-        #     get_fitness(
-        #         results=sol,
-        #         coefs=coefs,
-        #         pizzas_ingredients=self.parameters["pizzas"],
-        #         preferences=self.parameters["preferences"],
-        #     )
-        #     for sol in solutions_list
-        # ]
-        # self.canvas.axes.clear()
-        # self.canvas.axes.plot(fitness_over_time)
-        # self.canvas.draw()
+
+        self.canvas.axes.clear()
+        self.canvas.axes.plot(fitness_over_time)
+        self.canvas.draw()
+
 
 
 if __name__ == "__main__":
