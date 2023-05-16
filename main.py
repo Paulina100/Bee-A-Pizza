@@ -1,30 +1,39 @@
-from bee_a_pizza.bees_algorithm.bees import *
-from bee_a_pizza.import_export.import_pizzas import *
-from bee_a_pizza.generators.order_generation import *
-from bee_a_pizza.bees_algorithm.solution_evaluation import *
-import matplotlib.pyplot as plt
-from time import time
+"""Main file to run the bees algorithm on the pizza problem."""
 
-pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file(
-    "data/Pizzas.csv"
+from time import time
+import numpy as np
+import matplotlib.pyplot as plt
+
+from bee_a_pizza.bees_algorithm.bees import bees_algorithm
+from bee_a_pizza.import_export.import_pizzas import read_pizza_file
+from bee_a_pizza.generators.order_generation import (
+    generate_n_slices_per_customer,
+    generate_preferences,
+    get_preferences_by_slice,
 )
+from bee_a_pizza.bees_algorithm.solution_evaluation import get_fitness
+
+# load pizzas
+pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file("data/Pizzas.csv")
 print(pizzas.shape)
 
+# generate slices
 n_slices = generate_n_slices_per_customer(min_slices=2, max_slices=5, n_customers=15)
 preferences = generate_preferences(
     n_customers=15, n_ingredients=pizzas.shape[1], avg_likes=7, avg_dislikes=7
 )
 slices = get_preferences_by_slice(preferences, n_slices)
 print(slices.shape)
-max_cost = 1000
+MAX_COST = 1000
 
 coefs = np.array([1, 2])
 
+# solve
 start = time()
 result, solutions_list = bees_algorithm(
     pizzas=pizzas,
     slices=slices,
-    max_cost=max_cost,
+    max_cost=MAX_COST,
     pizza_prices=np.array(pizza_prices),
 )
 end = time()
@@ -39,7 +48,7 @@ fitness = get_fitness(
     coefs=coefs,
     pizzas_ingredients=pizzas,
     preferences=slices,
-)[0]
+)
 
 all_margharitas = np.zeros(result.shape, dtype=int)
 all_margharitas[:, 0] = 1
@@ -48,7 +57,7 @@ fitness_all_margharitas = get_fitness(
     coefs=coefs,
     pizzas_ingredients=pizzas,
     preferences=slices,
-)[0]
+)
 
 print(f"Fitness = {fitness}")
 print(f"Fitness all margharitas = {fitness_all_margharitas}")

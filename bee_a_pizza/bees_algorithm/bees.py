@@ -1,6 +1,7 @@
-from bee_a_pizza.bees_algorithm.solution_generation import *
-from bee_a_pizza.bees_algorithm.neighbors import get_neighbor
 from math import inf
+
+from bee_a_pizza.bees_algorithm.neighbors import get_neighbor
+from bee_a_pizza.bees_algorithm.solution_generation import *
 
 
 def local_search(
@@ -9,7 +10,7 @@ def local_search(
     max_cost: float,
     pizza_prices: np.ndarray,
     coefs: np.ndarray,
-    starting_solution: np.array,
+    starting_solution: np.ndarray,
     foragers_n: int,
     search_cycle_proportion: float,
     neighbor_swap_proba: float = 0.5,

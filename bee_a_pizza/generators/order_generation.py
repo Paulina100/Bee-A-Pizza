@@ -2,7 +2,7 @@
 
 import numpy as np
 
-
+# TODO remove this function, introduces unnecessary complexity
 def generate_n_slices_per_customer(
     min_slices: int, max_slices: int, n_customers: int
 ) -> np.ndarray:
