@@ -1,0 +1,26 @@
+customer_id;pizza;n_slices;ingredients_liked;ingredients_hated
+0;Pescatore;2;tuńczyk;sos pomidorowy
+1;Hawajska;1;ananas, ser, szynka;
+1;Neapolitana;2;boczek, pomidor, ser, szynka;
+2;Carbonara;1;sos czosnkowy;świeża pietruszka
+2;Hawajska;1;;ser
+3;Carbonara;2;jajko, sos czosnkowy, świeża pietruszka;czosnek
+4;Hawajska;3;ananas, szynka;
+5;Neapolitana;2;boczek, pomidor, salami, ser;
+6;Pescatore;1;;
+6;Carbonara;1;czosnek, jajko, sos czosnkowy;świeża pietruszka
+6;Hawajska;1;;
+7;Carbonara;1;świeża pietruszka;sos czosnkowy
+7;Pescatore;1;;oregano
+7;Rafaello;1;pieczarki;oregano
+8;Rafaello;1;;
+8;Neapolitana;3;oliwki, papryka, pomidor;
+9;Rafaello;2;szynka;
+10;Rafaello;2;pieczarki, sos pomidorowy;
+11;Carbonara;2;cebula, jajko, sos czosnkowy;
+12;Rafaello;2;kurczak, pieczarki, ser;
+13;Pescatore;2;ser, tuńczyk;oregano
+13;Hawajska;1;ser;oregano
+14;Hawajska;1;oregano;ser
+14;Carbonara;1;czosnek;
+14;Neapolitana;1;oregano;ser

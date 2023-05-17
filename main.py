@@ -15,7 +15,7 @@ from bee_a_pizza.bees_algorithm.solution_evaluation import get_fitness
 from bee_a_pizza.import_export.export import export_generated_customers
 
 # load pizzas
-pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file("data/Pizzas.csv")
+pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file("data/pizzas.csv")
 print(pizzas.shape)
 
 # generate slices
@@ -44,8 +44,8 @@ export_generated_customers(
     solution=result,
     pizza_names=pizza_names,
     ingredient_names=ingredient_names,
-    customer_slices_filename="customers.csv",
-    pizza_order_filename="order.csv",
+    customer_slices_filename="data/customers.csv",
+    pizza_order_filename="data/order.csv",
 )
 
 print(pizza_names)

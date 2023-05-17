@@ -147,7 +147,7 @@ def find_best_coefs(
 
 # Tests
 pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file(
-    "../../data/Pizzas.csv"
+    "../../data/pizzas.csv"
 )
 print("Pizzas:", pizzas.shape)
 

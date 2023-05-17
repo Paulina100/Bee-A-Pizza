@@ -115,7 +115,7 @@ def export_generated_customers(
     ]
 
     with open(customer_slices_filename, "w+", encoding="utf-8", newline="") as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, delimiter=";")
         writer.writerow(
             [
                 "customer_id",
@@ -147,13 +147,13 @@ def export_generated_customers(
                         customer,
                         pizza,
                         n_slices,
-                        ingredients_liked,
-                        ingredients_hated,
+                        ', '.join(ingredients_liked),
+                        ', '.join(ingredients_hated),
                     ]
                 )
 
     with open(pizza_order_filename, "w+", encoding="utf-8", newline="") as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, delimiter=";")
         writer.writerow(["pizza", "n_slices"])
 
         for pizza, n_slices in pizza_names_with_count:
