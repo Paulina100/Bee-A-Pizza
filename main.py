@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 from bee_a_pizza.bees_algorithm.bees import bees_algorithm
 from bee_a_pizza.import_export.import_pizzas import read_pizza_file
+from bee_a_pizza.import_export.import_preferences import read_preferences_file
 from bee_a_pizza.generators.order_generation import (
     generate_n_slices_per_customer,
     generate_preferences,
@@ -19,10 +20,13 @@ pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file("data/pizz
 print(pizzas.shape)
 
 # generate slices
-n_slices = generate_n_slices_per_customer(min_slices=2, max_slices=5, n_customers=15)
-preferences = generate_preferences(
-    n_customers=15, n_ingredients=pizzas.shape[1], avg_likes=7, avg_dislikes=7
-)
+# n_slices = generate_n_slices_per_customer(min_slices=2, max_slices=5, n_customers=15)
+# preferences = generate_preferences(
+#     n_customers=15, n_ingredients=pizzas.shape[1], avg_likes=7, avg_dislikes=7
+# )
+
+n_slices, preferences = read_preferences_file("data/preferences.csv", ingredient_names)
+
 slices = get_preferences_by_slice(preferences, n_slices)
 print(slices.shape)
 MAX_COST = 1000

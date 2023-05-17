@@ -1,0 +1,10 @@
+customer_id;n_slices;ingredients_liked;ingredients_hated
+0;5;sos pomidorowy, ser, oregano, pieczarki;sos czosnkowy, boczek, cebula, czosnek, jajko, parmezan, świeża pietruszka
+1;2;sos czosnkowy, boczek, cebula, czosnek, jajko, parmezan, świeża pietruszka;sos pomidorowy, ser, oregano, pieczarki
+2;9;sos pomidorowy, ser, oregano, boczek, salami, kiełbasa, cebula;
+3;1;ser, oregano, kurczak;sos czosnkowy, brokuły, kukurydza
+4;5;ser feta, szpinak, oliwki, czerwona cebula;sos pomidorowy, ser, oregano, brokuł
+5;3;ser, oregano, tuńczyk;kiełbasa, pieczarki, papryka pepperoni
+6;4;sos BBQ, boczek, grillowany kurczak, czerwona cebula;szynka, kurczak, pieczarki, ananas
+7;3;boczek, salami, kiełbasa, cebula;oregano, sos tabasco, kurczak, wołowina, pomidor
+8;10;sos sambal (sos ostry), ser, oregano, pieczarki;sos pomidorowy, szynka, salami, boczek
