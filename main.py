@@ -12,6 +12,7 @@ from bee_a_pizza.generators.order_generation import (
     get_preferences_by_slice,
 )
 from bee_a_pizza.bees_algorithm.solution_evaluation import get_fitness
+from bee_a_pizza.import_export.export import export_generated_customers
 
 # load pizzas
 pizzas, pizza_names, ingredient_names, pizza_prices = read_pizza_file("data/Pizzas.csv")
@@ -31,13 +32,21 @@ coefs = np.array([1, 2])
 # solve
 start = time()
 result, solutions_list = bees_algorithm(
-    pizzas=pizzas,
-    slices=slices,
-    max_cost=MAX_COST,
-    pizza_prices=np.array(pizza_prices),
+    pizzas=pizzas, slices=slices, max_cost=MAX_COST, pizza_prices=np.array(pizza_prices)
 )
 end = time()
 # print(result)
+
+export_generated_customers(
+    pizzas=pizzas,
+    n_slices_per_customers=n_slices,
+    preferences=preferences,
+    solution=result,
+    pizza_names=pizza_names,
+    ingredient_names=ingredient_names,
+    customer_slices_filename="customers.csv",
+    pizza_order_filename="order.csv",
+)
 
 print(pizza_names)
 sum_result = np.sum(result, axis=0)
