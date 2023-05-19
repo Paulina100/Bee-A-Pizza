@@ -20,17 +20,25 @@ def read_preferences_file(
     n_slices = np.zeros(n_customers, dtype=np.int8)
 
     for i, row in enumerate(data_rows):
-        _, n_slices_per_customer, ingredients_liked, ingredients_hated = row
+        if len(row) == 4:
+            _, n_slices_per_customer, ingredients_liked, ingredients_hated = row
+        else:
+            raise ValueError("Wrongly formatted csv")
+
         n_slices[i] = int(n_slices_per_customer)
 
-        for ingredient in [i.strip() for i in ingredients_liked.split(",")]:
+        for ingredient in [
+            i.strip() for i in ingredients_liked.split(",") if i.strip() != ""
+        ]:
             try:
                 j = all_ingredients_list.index(ingredient)
                 customers_preferences_matrix[i, j] = 1
             except ValueError:
                 print(f"Ingredient {ingredient} not recognized")
 
-        for ingredient in [i.strip() for i in ingredients_hated.split(",")]:
+        for ingredient in [
+            i.strip() for i in ingredients_hated.split(",") if i.strip() != ""
+        ]:
             try:
                 j = all_ingredients_list.index(ingredient)
                 customers_preferences_matrix[i, j] = -1

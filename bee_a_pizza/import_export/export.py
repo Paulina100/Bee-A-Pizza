@@ -147,8 +147,8 @@ def export_generated_customers(
                         customer,
                         pizza,
                         n_slices,
-                        ', '.join(ingredients_liked),
-                        ', '.join(ingredients_hated),
+                        ", ".join(ingredients_liked),
+                        ", ".join(ingredients_hated),
                     ]
                 )
 
