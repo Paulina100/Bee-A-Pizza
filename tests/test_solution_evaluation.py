@@ -202,7 +202,7 @@ def test_get_number_of_wasted_slices():
     assert get_number_of_wasted_slices(slices_pizzas2, 8) == 27
 
 
-def test_get_fitness():
+def test_get_cost():
     results = np.array(
         [
             [1, 0, 0, 0, 0, 0],
@@ -238,6 +238,6 @@ def test_get_fitness():
 
     n_likes = 3
     n_hates = 9
-    result = get_fitness(results, coefs, pizzas_ingredients, preferences)
+    result = get_cost(results, coefs, pizzas_ingredients, preferences)
 
     assert result == -3 + 9

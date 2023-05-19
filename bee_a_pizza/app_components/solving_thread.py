@@ -3,7 +3,7 @@ import time
 import logging
 import numpy as np
 from bee_a_pizza.bees_algorithm.bees import bees_algorithm
-from bee_a_pizza.bees_algorithm.solution_evaluation import get_fitness
+from bee_a_pizza.bees_algorithm.solution_evaluation import get_cost
 
 
 class SolutionWorker(QObject):
@@ -11,7 +11,7 @@ class SolutionWorker(QObject):
 
     def __init__(self, parameters):
         super().__init__()
-        self.fitness_over_time = []
+        self.cost_over_time = []
         self.parameters = parameters
         self.solution = None
 
@@ -23,8 +23,6 @@ class SolutionWorker(QObject):
         result, solutions_list = bees_algorithm(
             pizzas=parameters["pizzas"],
             slices=parameters["slices"],
-            max_cost=parameters["max_cost"],
-            pizza_prices=parameters["pizza_prices"],
             coefs=coefs,
             scouts_n=parameters["scouts_n"],
             best_solutions_n=parameters["best_solutions_n"],
@@ -33,14 +31,14 @@ class SolutionWorker(QObject):
             elite_foragers_n=parameters["elite_foragers_n"],
             local_search_cycles=parameters["local_search_cycles"],
             generations=parameters["generations"],
-            neighbor_swap_proba=parameters["neighbour_swap_probability"],
+            pizza_swap_proba=parameters["pizza_swap_probability"],
         )
         logging.info("Finished solving thread")
 
         self.solution = result
 
-        self.fitness_over_time = [
-            get_fitness(
+        self.cost_over_time = [
+            get_cost(
                 results=solution,
                 coefs=coefs,
                 pizzas_ingredients=parameters["pizzas"],
@@ -48,6 +46,6 @@ class SolutionWorker(QObject):
             )
             for solution in solutions_list
         ]
-        logging.info("Finished fitness evaluation")
+        logging.info("Finished cost evaluation")
         self.finished.emit()
         logging.info("Finished emitting signal")

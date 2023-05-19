@@ -333,29 +333,18 @@ class MainWindow(QMainWindow):
         )
         solution_parameters_grid.addLayout(generations_number_hbox, 4, 0)
 
-        # neighbour_swap_probability
-        neighbour_swap_probability_hbox = NumberEntry(
-            "Neighbour swap probability",
+        # pizza_swap_probability
+        pizza_swap_probability_hbox = NumberEntry(
+            "Pizza swap probability",
             default_value=0.3,
             min_value=0,
             max_value=1,
-            var_name="neighbour_swap_probability",
+            var_name="pizza_swap_probability",
             params=self.parameters,
             parse_function=float,
         )
-        solution_parameters_grid.addLayout(neighbour_swap_probability_hbox, 4, 1)
+        solution_parameters_grid.addLayout(pizza_swap_probability_hbox, 4, 1)
 
-        # max cost
-        max_cost_hbox = NumberEntry(
-            "Max cost",
-            default_value=100,
-            min_value=1,
-            max_value=100000,
-            var_name="max_cost",
-            params=self.parameters,
-            parse_function=float,
-        )
-        solution_parameters_grid.addLayout(max_cost_hbox, 5, 0)
 
     def open_file_dialog(self, error_label):
         """Open file dialog and read pizzas from file if possible"""
@@ -485,12 +474,12 @@ class MainWindow(QMainWindow):
         solve_button_error_label.setText("Solved!")
         solve_button.setEnabled(True)
         self.parameters["solution"] = self.worker.solution
-        self.plot(self.worker.fitness_over_time)
+        self.plot(self.worker.cost_over_time)
 
-    def plot(self, fitness_over_time):
-        """Plot the fitness over time"""
+    def plot(self, cost_over_time):
+        """Plot the cost over time"""
         self.canvas.axes.clear()
-        self.canvas.axes.plot(fitness_over_time)
+        self.canvas.axes.plot(cost_over_time)
         self.canvas.draw()
 
     def choose_directory_to_save_solution_to(self):

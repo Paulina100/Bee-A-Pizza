@@ -158,38 +158,18 @@ def get_slices_pizzas_from_indices(
     return slices_pizzas
 
 
-def is_pizzas_cost_leq_than_max_cost(
-    slices_pizzas: np.ndarray,
-    n_slices_in_pizza: int,
-    max_cost: float,
-    pizza_prices: np.ndarray,
-) -> bool:
-    """
-    Returns true if cost of pizzas is less than or equal the max_cost.
-
-    Parameters
-    ----------
-    `slices_pizzas` : (n_slices, n_pizzas)
-    `n_slices_in_pizza` : int
-    `max_cost` : float
-    `pizza_prices` : (n_pizzas,)
-    """
-    cost = get_cost_of_pizzas(slices_pizzas, n_slices_in_pizza, pizza_prices)
-    return cost <= max_cost
-
-
-def get_fitness(
+def get_cost(
     results: np.ndarray,
     coefs: np.ndarray,
     pizzas_ingredients: np.ndarray,
     preferences: np.ndarray,
 ) -> float:
     """
-    Calculates fitness of the given solution, based on preferences and pizzas' ingredients.
+    Calculates cost of the given solution, based on preferences and pizzas' ingredients.
 
     Parameters
     ----------
-    `results` : (n_slices, n_pizzas) - solution of which fitness needs to be calculated
+    `results` : (n_slices, n_pizzas) - solution of which cost needs to be calculated
     `coefs` : (2) - array in form of [alpha, beta], where the values represent coefficients
         corresponding to the importance of: maximizing liked ingredients, minimizing disliked
         ingredients. Signs of coefs don't matter.
