@@ -12,7 +12,7 @@ from bee_a_pizza.generators.order_generation import (
     generate_preferences,
     get_preferences_by_slice,
 )
-from bee_a_pizza.bees_algorithm.solution_evaluation import get_fitness
+from bee_a_pizza.bees_algorithm.solution_evaluation import get_cost
 from bee_a_pizza.import_export.export import export_generated_customers
 
 # load pizzas
@@ -29,14 +29,13 @@ n_slices, preferences = read_preferences_file("data/preferences.csv", ingredient
 
 slices = get_preferences_by_slice(preferences, n_slices)
 print(slices.shape)
-MAX_COST = 1000
 
 coefs = np.array([1, 2])
 
 # solve
 start = time()
 result, solutions_list = bees_algorithm(
-    pizzas=pizzas, slices=slices, max_cost=MAX_COST, pizza_prices=np.array(pizza_prices)
+    pizzas=pizzas, slices=slices,
 )
 end = time()
 # print(result)
@@ -56,7 +55,7 @@ print(pizza_names)
 sum_result = np.sum(result, axis=0)
 print(sum_result)
 
-fitness = get_fitness(
+cost = get_cost(
     results=result,
     coefs=coefs,
     pizzas_ingredients=pizzas,
@@ -65,19 +64,19 @@ fitness = get_fitness(
 
 all_margharitas = np.zeros(result.shape, dtype=int)
 all_margharitas[:, 0] = 1
-fitness_all_margharitas = get_fitness(
+cost_all_margharitas = get_cost(
     results=all_margharitas,
     coefs=coefs,
     pizzas_ingredients=pizzas,
     preferences=slices,
 )
 
-print(f"Fitness = {fitness}")
-print(f"Fitness all margharitas = {fitness_all_margharitas}")
+print(f"cost = {cost}")
+print(f"cost all margharitas = {cost_all_margharitas}")
 print(f"Time = {end - start}")
 
-fitness_over_time = [
-    get_fitness(
+cost_over_time = [
+    get_cost(
         results=sol,
         coefs=coefs,
         pizzas_ingredients=pizzas,
@@ -86,5 +85,5 @@ fitness_over_time = [
     for sol in solutions_list
 ]
 
-plt.plot(fitness_over_time)
+plt.plot(cost_over_time)
 plt.show()

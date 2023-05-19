@@ -16,8 +16,6 @@ def generate_random_solution(
     `n_slices` : int
     `n_pizzas` : int
     `n_slices_in_pizza` : int
-    `max_cost` : float
-    `pizza_prices` : (n_pizzas,)
     `random_state` : Optional[int]
 
     Returns

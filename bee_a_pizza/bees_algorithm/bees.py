@@ -7,16 +7,14 @@ from bee_a_pizza.bees_algorithm.solution_generation import *
 def local_search(
     pizzas: np.ndarray,
     slices: np.ndarray,
-    max_cost: float,
-    pizza_prices: np.ndarray,
     coefs: np.ndarray,
     starting_solution: np.ndarray,
     foragers_n: int,
     search_cycle_proportion: float,
-    neighbor_swap_proba: float = 0.5,
+    pizza_swap_proba: float = 0.5,
 ):
     best_solution = starting_solution
-    best_fitness = get_fitness(
+    best_cost = get_cost(
         results=starting_solution,
         coefs=coefs,
         pizzas_ingredients=pizzas,
@@ -26,25 +24,23 @@ def local_search(
         neighbour = get_neighbor(
             results=starting_solution,
             search_cycle_proportion=search_cycle_proportion,
-            pizza_swap_proba=neighbor_swap_proba,
+            pizza_swap_proba=pizza_swap_proba,
         )
-        neighbour_fitness = get_fitness(
+        neighbour_cost = get_cost(
             results=neighbour,
             coefs=coefs,
             pizzas_ingredients=pizzas,
             preferences=slices,
         )
-        if neighbour_fitness < best_fitness:
+        if neighbour_cost < best_cost:
             best_solution = neighbour
-            best_fitness = neighbour_fitness
-    return best_solution, best_fitness
+            best_cost = neighbour_cost
+    return best_solution, best_cost
 
 
 def bees_algorithm(
     pizzas: np.ndarray,
     slices: np.ndarray,
-    max_cost: float,
-    pizza_prices: np.ndarray,
     coefs: np.ndarray = np.array([1, 2]),
     scouts_n: int = 80,
     best_solutions_n: int = 50,
@@ -53,7 +49,7 @@ def bees_algorithm(
     elite_foragers_n: int = 40,
     local_search_cycles: int = 8,
     generations: int = 125,
-    neighbor_swap_proba: float = 0.3,
+    pizza_swap_proba: float = 0.3,
 ):
     # initializing possible solutions
     possible_solutions = [
@@ -65,11 +61,11 @@ def bees_algorithm(
         for _ in range(scouts_n)
     ]
 
-    # lists of: [solution, fitness, search_cycle_n]
+    # lists of: [solution, cost, search_cycle_n]
     possible_solutions = [
         [
             solution,
-            get_fitness(
+            get_cost(
                 results=solution,
                 coefs=coefs,
                 pizzas_ingredients=pizzas,
@@ -80,15 +76,15 @@ def bees_algorithm(
         for solution in possible_solutions
     ]
     best_solution_over_time = [0 for _ in range(generations)]
-    best_fitness = inf
+    best_cost = inf
 
     for gen in range(generations):
         # Recruitment
         possible_solutions.sort(key=lambda x: x[1], reverse=False)
         # Finding new best solution
-        if possible_solutions[0][1] < best_fitness:
+        if possible_solutions[0][1] < best_cost:
             best_solution_over_time[gen] = possible_solutions[0][0]
-            best_fitness = possible_solutions[0][1]
+            best_cost = possible_solutions[0][1]
         else:
             best_solution_over_time[gen] = best_solution_over_time[gen - 1]
 
@@ -97,13 +93,11 @@ def bees_algorithm(
             new_solution = local_search(
                 pizzas,
                 slices,
-                max_cost,
-                pizza_prices,
                 coefs,
                 possible_solutions[i][0],
                 elite_foragers_n,
                 possible_solutions[i][2] / local_search_cycles,
-                neighbor_swap_proba,
+                pizza_swap_proba,
             )
             if new_solution[1] < possible_solutions[i][1]:
                 possible_solutions[i] = [new_solution[0], new_solution[1], 0]
@@ -117,13 +111,11 @@ def bees_algorithm(
             new_solution = local_search(
                 pizzas,
                 slices,
-                max_cost,
-                pizza_prices,
                 coefs,
                 possible_solutions[i][0],
                 best_foragers_n,
                 possible_solutions[i][2] / local_search_cycles,
-                neighbor_swap_proba,
+                pizza_swap_proba,
             )
             if new_solution[1] < possible_solutions[i][1]:
                 possible_solutions[i] = [new_solution[0], new_solution[1], 0]
@@ -140,7 +132,7 @@ def bees_algorithm(
                 n_pizzas=len(pizzas),
                 n_slices_in_pizza=8,
             )
-            possible_solutions[i][1] = get_fitness(
+            possible_solutions[i][1] = get_cost(
                 results=possible_solutions[i][0],
                 coefs=coefs,
                 pizzas_ingredients=pizzas,
@@ -150,7 +142,7 @@ def bees_algorithm(
 
     # Finding new best solution
     possible_solutions.sort(key=lambda x: x[1], reverse=True)
-    if possible_solutions[0][1] < best_fitness:
+    if possible_solutions[0][1] < best_cost:
         best_solution_over_time[generations - 1] = possible_solutions[0][0]
 
     return best_solution_over_time[generations - 1], best_solution_over_time
