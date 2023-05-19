@@ -6,6 +6,7 @@ for the communication between the different components.
 
 import logging
 import sys
+import os
 from collections import defaultdict
 
 from PyQt5.QtCore import QThread
@@ -26,6 +27,8 @@ from bee_a_pizza.app_components.canvas import MplCanvas
 from bee_a_pizza.app_components.entry import NumberEntry
 from bee_a_pizza.app_components.solving_thread import SolutionWorker
 from bee_a_pizza.import_export.import_pizzas import read_pizza_file
+from bee_a_pizza.import_export.import_preferences import read_preferences_file
+from bee_a_pizza.import_export.export import export_generated_customers
 from bee_a_pizza.generators.order_generation import (
     generate_n_slices_per_customer,
     generate_preferences,
@@ -76,7 +79,7 @@ class MainWindow(QMainWindow):
 
         available_pizzas_file_label = QLabel("Input file: None")
 
-        choose_pizza_file_button = QPushButton("Choose pizza .csv file")
+        choose_pizza_file_button = QPushButton("Choose pizzas.csv file")
         choose_pizza_file_hbox.addWidget(choose_pizza_file_button)
         choose_pizza_file_button.clicked.connect(
             lambda: self.open_file_dialog(available_pizzas_file_label)
@@ -84,8 +87,26 @@ class MainWindow(QMainWindow):
 
         choose_pizza_file_hbox.addWidget(available_pizzas_file_label)
 
+        # input preferences file
+        header_label_2 = QLabel("Customer preferences")
+        left_layout.addWidget(header_label_2)
+        header_label_2.setFont(QFont("SansSerif", 15))
+
+        choose_preferences_file_hbox = QHBoxLayout()
+        left_layout.addLayout(choose_preferences_file_hbox)
+
+        customer_preferences_file_label = QLabel("Input file: None")
+
+        choose_preferences_file_button = QPushButton("Choose preferences.csv file")
+        choose_preferences_file_hbox.addWidget(choose_preferences_file_button)
+        choose_preferences_file_button.clicked.connect(
+            lambda: self.open_preferences_file_dialog(customer_preferences_file_label)
+        )
+
+        choose_preferences_file_hbox.addWidget(customer_preferences_file_label)
+
         # left label 2
-        generate_parameters_label = QLabel("Generate slices parameters")
+        generate_parameters_label = QLabel("Random customer preferences")
         left_layout.addWidget(generate_parameters_label)
         generate_parameters_label.setFont(QFont("SansSerif", 15))
 
@@ -96,7 +117,7 @@ class MainWindow(QMainWindow):
         generate_slices_button_hbox = QHBoxLayout()
         left_layout.addLayout(generate_slices_button_hbox)
 
-        self.generate_slices_button = QPushButton("Generate slices")
+        self.generate_slices_button = QPushButton("Generate preferences")
         generate_slices_button_hbox.addWidget(self.generate_slices_button)
 
         generate_slices_button_error_label = QLabel("")
@@ -122,12 +143,32 @@ class MainWindow(QMainWindow):
         solve_button_hbox.addWidget(solve_button)
 
         solve_button_error_label = QLabel("")
-        solve_button_error_label.setStyleSheet("color: red")
         solve_button_hbox.addWidget(solve_button_error_label)
 
         solve_button.clicked.connect(
             lambda: self.solve_threaded(solve_button, solve_button_error_label)
         )
+
+        # save solution
+        save_solution_hbox = QHBoxLayout()
+        left_layout.addLayout(save_solution_hbox)
+
+        choose_directory_to_save_solution_button = QPushButton(
+            "Choose directory to save solution"
+        )
+        choose_directory_to_save_solution_button.clicked.connect(
+            self.choose_directory_to_save_solution_to
+        )
+        save_solution_hbox.addWidget(choose_directory_to_save_solution_button)
+
+        save_solution_button = QPushButton("Save")
+        save_solution_button.clicked.connect(
+            lambda: self.save_solution(save_solution_error_label)
+        )
+        save_solution_hbox.addWidget(save_solution_button)
+
+        save_solution_error_label = QLabel("")
+        save_solution_hbox.addWidget(save_solution_error_label)
 
     def generate_slice_parameter_grid(self, left_layout):
         """Generates the grid for the slice generation parameters."""
@@ -331,6 +372,11 @@ class MainWindow(QMainWindow):
         except FileNotFoundError as error:
             logging.info(error)
             return
+        except Exception as error:
+            logging.info(error)
+            error_label.setStyleSheet("color: red")
+            error_label.setText("Error during reading file")
+            return
 
         self.parameters["input_file"] = fname
         self.parameters["pizzas"] = pizzas
@@ -339,6 +385,47 @@ class MainWindow(QMainWindow):
         self.parameters["pizza_prices"] = pizza_prices
 
         logging.debug("Pizzas shape: %s", str(self.parameters["pizzas"].shape))
+        error_label.setStyleSheet("")
+        error_label.setText(f"Input file: {fname}")
+
+    def open_preferences_file_dialog(self, error_label):
+        """Open file dialog and read preferences from file if possible"""
+        if "pizzas" not in self.parameters or self.parameters["pizzas"] is None:
+            error_label.setText("Error: No pizzas file read")
+            error_label.setStyleSheet("color: red")
+            return
+
+        fname = QFileDialog.getOpenFileName(self, "Open file", ".", "CSV files (*.csv)")
+        logging.debug(fname)
+        try:
+            fname = fname[0]
+            n_slices, preferences = read_preferences_file(
+                fname, self.parameters["ingredient_names"]
+            )
+        except FileNotFoundError as error:
+            logging.info(error)
+            return
+        except Exception as error:
+            logging.info(error)
+            error_label.setStyleSheet("color: red")
+            error_label.setText("Error during reading file")
+            return
+
+        self.parameters["n_slices"] = n_slices
+        self.parameters["preferences"] = preferences
+        try:
+            self.parameters["slices"] = get_preferences_by_slice(preferences, n_slices)
+        except Exception as error:
+            logging.info(error)
+            error_label.setStyleSheet("color: red")
+            error_label.setText("Error during generating slices")
+
+        logging.debug("n_slices shape: %s", str(self.parameters["n_slices"].shape))
+        logging.debug(
+            "preferences shape: %s", str(self.parameters["preferences"].shape)
+        )
+        logging.debug("slices shape: %s", str(self.parameters["slices"].shape))
+        error_label.setStyleSheet("")
         error_label.setText(f"Input file: {fname}")
 
     def generate_slices(self, generate_slices_button_error_label):
@@ -371,8 +458,10 @@ class MainWindow(QMainWindow):
         """Solves the problem in a separate thread given pizza, slice and solver parameters"""
         if self.parameters["slices"] is None or self.parameters["pizzas"] is None:
             solve_button_error_label.setText("Error: No slices generated")
+            solve_button_error_label.setStyleSheet("color: red")
             return
 
+        solve_button_error_label.setStyleSheet("")
         solve_button_error_label.setText("Solving...")
 
         self.solving_thread = QThread()
@@ -395,6 +484,7 @@ class MainWindow(QMainWindow):
         """Called when the thread finishes, to update the GUI"""
         solve_button_error_label.setText("Solved!")
         solve_button.setEnabled(True)
+        self.parameters["solution"] = self.worker.solution
         self.plot(self.worker.fitness_over_time)
 
     def plot(self, fitness_over_time):
@@ -402,6 +492,48 @@ class MainWindow(QMainWindow):
         self.canvas.axes.clear()
         self.canvas.axes.plot(fitness_over_time)
         self.canvas.draw()
+
+    def choose_directory_to_save_solution_to(self):
+        dirname = QFileDialog.getExistingDirectory(self, "Open directory", ".")
+        logging.debug(dirname)
+        self.parameters["dir_solution_name"] = dirname
+
+    def save_solution(self, error_label):
+        if (
+            "dir_solution_name" not in self.parameters
+            or self.parameters["dir_solution_name"] is None
+        ):
+            error_label.setText("Choose directory first")
+            error_label.setStyleSheet("color: red")
+            return
+
+        if "solution" not in self.parameters or self.parameters["solution"] is None:
+            error_label.setText("Nothing to save")
+            error_label.setStyleSheet("color: red")
+            return
+
+        dirname = self.parameters["dir_solution_name"]
+
+        try:
+            export_generated_customers(
+                pizzas=self.parameters["pizzas"],
+                n_slices_per_customers=self.parameters["n_slices"],
+                preferences=self.parameters["preferences"],
+                solution=self.parameters["solution"],
+                pizza_names=self.parameters["pizza_names"],
+                ingredient_names=self.parameters["ingredient_names"],
+                customer_slices_filename=os.path.join(dirname, "customers.csv"),
+                pizza_order_filename=os.path.join(dirname, "order.csv"),
+            )
+
+            error_label.setText("Saved to " + dirname)
+            error_label.setStyleSheet("")
+
+            logging.info("Exported and saved to %s", dirname)
+        except Exception as e:
+            error_label.setText("Error during exporting")
+            error_label.setStyleSheet("color: red")
+            logging.info(str(e))
 
 
 if __name__ == "__main__":

@@ -31,7 +31,11 @@ def read_pizza_file(
     )
 
     for i, row in enumerate(data_rows):
-        _, name, ingredients, price = row
+        if len(row) == 4:
+            _, name, ingredients, price = row
+        else:
+            raise ValueError("Wrongly formatted csv")
+
         prices_list.append(float(price))
         pizzas_names.append(name)
         for ingredient in [i.strip() for i in ingredients.split(",")]:

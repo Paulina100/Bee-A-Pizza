@@ -13,6 +13,7 @@ class SolutionWorker(QObject):
         super().__init__()
         self.fitness_over_time = []
         self.parameters = parameters
+        self.solution = None
 
     def run(self):
         parameters = self.parameters
@@ -35,6 +36,8 @@ class SolutionWorker(QObject):
             neighbor_swap_proba=parameters["neighbour_swap_probability"],
         )
         logging.info("Finished solving thread")
+
+        self.solution = result
 
         self.fitness_over_time = [
             get_fitness(
