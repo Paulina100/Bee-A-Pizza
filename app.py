@@ -480,6 +480,9 @@ class MainWindow(QMainWindow):
         """Plot the cost over time"""
         self.canvas.axes.clear()
         self.canvas.axes.plot(cost_over_time)
+        self.canvas.axes.set_title("Fitness over time")
+        self.canvas.axes.set_xlabel('Iteration')
+        self.canvas.axes.set_ylabel('Cost function')
         self.canvas.draw()
 
     def choose_directory_to_save_solution_to(self):
