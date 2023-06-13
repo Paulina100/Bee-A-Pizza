@@ -8,7 +8,7 @@ class NumberEntry(QHBoxLayout):
         label_text: str,
         var_name: str,
         params: dict,
-        default_value: int = 1,
+        default_value: int | float = 1,
         min_value: int = 0,
         max_value: int = 1000,
         parse_function=int,
