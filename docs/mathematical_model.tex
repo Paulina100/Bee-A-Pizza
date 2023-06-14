@@ -1,0 +1,89 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bm}
+
+\DeclareMathOperator*{\argmin}{argmin}
+
+\title{Model matematyczny}
+\date{}
+
+\begin{document}
+
+\centering
+
+$$
+    x = ( x_1, x_2, \dots, x_k ) \text{ - wektor pojedynczych potrzeb}
+$$
+$$
+    x_i \text{ - potrzeba ze zbiorami $L_i$ i $N_i$}
+$$
+$$
+    L_i \text{ - zbiór składników lubianych dla potrzeby $i$-tej}
+$$
+$$
+    N_i \text{ - zbiór składników nielubianych dla potrzeby $i$-tej}
+$$
+
+$$
+    y = \{ y_1, y_2, \dots, y_n \} \text{ - zbiór różnych rodzajów pizz}
+$$
+$$
+    y_i \text{ - rodzaj pizzy ze zbiorem składników $S_i$ i ceną $c_i$}
+$$
+
+$$
+    z = ( z_1, z_2, \dots, z_k ) \text{ - wektor kawałków pizz}
+$$
+$$
+    z \in V(y) \text{ - zbiór $k$-elementowych wariacji z powtórzeniami zbioru $y$}
+$$
+
+Przestrzeń rozwiązań zatem to $V(y)$, a jej rozmiar to $n^k$.
+
+Liczba dopasowań negatywnych:
+$$
+    f(z) = \sum_{i=1}^{k} | N_i \cap S_i |
+$$
+
+Liczba dopasowań pozytywnych:
+$$
+    g(z) = \sum_{i=1}^{k} \left| L_i \cap S_i \right|
+$$
+
+Liczba kawałków nietworzących całej pizzy:
+$$
+    h(z) = \sum_{i=1}^{n}
+    \left[
+        \left(
+        \sum_{j=1}^{k}
+        \left( \text{kawałek $z_j$ jest rodzaju pizzy $y_i$} \right)
+        \right) \bmod{p}
+        \right]
+$$
+gdzie $p$ to liczba kawałków w jednej pizzy
+
+Funkcja kosztu:
+$$
+    C(z) = \alpha \cdot f(z) - g(z) + \beta \cdot h(z)
+$$
+
+Szukane:
+$$
+    z^* = \arg \min_{z \in V(y)} C(z)
+$$
+
+Warunek:
+$$
+    \sum_{i=1}^{n} c_i
+    \left\lceil \frac{1}{p} \sum_{j=1}^{k}
+    \left( \text{kawałek $z_j$ jest rodzaju pizzy $y_i$} \right)
+    \right\rceil
+    \leq c_{max}
+$$
+gdzie $c_{max}$ to maksymalny sumaryczny koszt
+
+\end{document}
