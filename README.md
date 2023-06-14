@@ -6,8 +6,6 @@ Gotowe
 * instancje testowe
 * optymalizacja hiperparametrów
 * wizualizacja wyników
-
-Do zrobienia:
 * dokumentacja
 * interfejs graficzny
-* dopracowanie formatu danych wejściowych/wyjściowych
+* format danych wejściowych/wyjściowych
